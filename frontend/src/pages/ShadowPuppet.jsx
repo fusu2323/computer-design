@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import HandTracking from '../components/HandTracking';
+import ShadowPuppetImg from '../assets/Shadow-Puppet.png';
 
 const ShadowPuppet = () => {
   const [currentTechnique, setCurrentTechnique] = useState(null);
@@ -142,6 +143,35 @@ const ShadowPuppet = () => {
               <p className="text-charcoal/70 text-sm leading-relaxed">{card.content}</p>
             </Card>
           ))}
+        </div>
+
+        {/* Interactive Experience Section */}
+        <div className="mb-16 relative overflow-hidden rounded-sm group cursor-pointer shadow-lg" onClick={() => window.location.href = '/shadow-puppet-test'}>
+          <div className="absolute inset-0">
+            <img 
+              src={ShadowPuppetImg} 
+              alt="皮影戏互动体验" 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-ink-black/90 via-ink-black/60 to-transparent"></div>
+          </div>
+          
+          <div className="relative z-10 p-8 md:p-12 flex flex-col justify-center h-full min-h-[300px]">
+            <div className="inline-block mb-3">
+              <span className="bg-vermilion text-white px-3 py-1 text-xs tracking-widest rounded-sm">特别呈现</span>
+            </div>
+            <h2 className="font-calligraphy text-4xl md:text-5xl text-white mb-4">
+              互动体验
+            </h2>
+            <p className="font-serif text-white/80 text-lg max-w-xl mb-8">
+              开启摄像头，挥动双手。通过先进的计算机视觉技术，让您亲自操纵皮影人物，感受光影之间的灵动与韵律。
+            </p>
+            <div>
+              <Button className="!bg-vermilion !text-white hover:!bg-vermilion/90 border-none font-bold shadow-md">
+                立即体验
+              </Button>
+            </div>
+          </div>
         </div>
 
         {!isPracticing ? (
