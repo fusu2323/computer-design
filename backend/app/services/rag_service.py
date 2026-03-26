@@ -78,8 +78,8 @@ class RAGService:
             return "未找到相关信息"
 
         # 使用 Cypher 匹配相关节点并返回其属性和关系
-        # 简化版：通过实体名进行模糊匹配
-        match_conditions = " OR ".join([f"n.name CONTAINS '{kw}' OR any(v IN [x IN keys(n) | toString(n[x])] WHERE v CONTAINS '{kw}')" for kw in keywords])
+        # 简化版：通过实体名和常见属性进行模糊匹配
+        match_conditions = " OR ".join([f"n.name CONTAINS '{kw}' OR n.description CONTAINS '{kw}' OR n.姓名 CONTAINS '{kw}' OR n.剧名 CONTAINS '{kw}'" for kw in keywords])
         
         query = f"""
         MATCH (n)
@@ -276,6 +276,9 @@ class RAGService:
 参考资料：
 {combined_context}"""
 
+        if conversation_history is None:
+            conversation_history = []
+            
         answer = self.llm.chat(messages=conversation_history + [{"role": "user", "content": question}], system_prompt=system_prompt)
 
         # 5. 生成追问

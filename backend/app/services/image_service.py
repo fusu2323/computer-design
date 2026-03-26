@@ -32,10 +32,7 @@ class CloudImageService:
         payload = {
             "model": self.model,
             "prompt": prompt,
-            "image_size": "1024x1024",
-            "batch_size": 1,
-            "num_inference_steps": 20,
-            "guidance_scale": 7.5
+            "image_size": "1024x1024"
         }
 
         try:
