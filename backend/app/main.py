@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.endpoints import vision_mentor, knowledge_curator, creative_artisan, orchestrator
+from app.api.endpoints import vision_mentor, knowledge_curator, creative_artisan, orchestrator, user_profile, certificate
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -21,6 +21,8 @@ app.include_router(vision_mentor.router, prefix=f"{settings.API_V1_STR}/vision",
 app.include_router(knowledge_curator.router, prefix=f"{settings.API_V1_STR}/knowledge", tags=["Knowledge Curator"])
 app.include_router(creative_artisan.router, prefix=f"{settings.API_V1_STR}/creative", tags=["Creative Artisan"])
 app.include_router(orchestrator.router, prefix=f"{settings.API_V1_STR}/orchestrator", tags=["Orchestrator"])
+app.include_router(user_profile.router, prefix=f"{settings.API_V1_STR}/user", tags=["User Profile"])
+app.include_router(certificate.router, prefix=f"{settings.API_V1_STR}/certificate", tags=["Certificate"])
 
 @app.get("/")
 def root():
