@@ -8,6 +8,7 @@ import MasterWorkshop from './pages/MasterWorkshop'
 import MyPractice from './pages/MyPractice'
 import VisionMentor from './pages/VisionMentor'
 import ShadowPuppet from './pages/ShadowPuppet'
+import CreativeWorkshop from './pages/CreativeWorkshop'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/knowledge-curator" element={<KnowledgeCurator />} />
         <Route path="/knowledge" element={<KnowledgeCurator />} />
         <Route path="/shadow-puppet" element={<ShadowPuppet />} />
+        <Route path="/creative-workshop" element={<CreativeWorkshop />} />
       </Routes>
     </Router>
   </React.StrictMode>,
