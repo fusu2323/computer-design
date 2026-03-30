@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Card from '../components/Card';
 import SuEmbroidery from '../assets/Suzhou-embroidery.png';
@@ -8,6 +9,7 @@ import Batik from '../assets/Batik.png';
 import ShadowPuppetImg from '../assets/Shadow-Puppet.png';
 
 const CraftLibrary = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
 
   const crafts = [
@@ -89,7 +91,7 @@ const CraftLibrary = () => {
         {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {crafts.filter(craft => activeTab === 'all' || craft.category === activeTab).map(craft => (
-            <Card key={craft.id} className="cursor-pointer group" onClick={() => window.location.href = craft.category === 'shadow' ? '/shadow-puppet' : '#'}>
+            <Card key={craft.id} className="cursor-pointer group" onClick={() => navigate(craft.category === 'shadow' ? '/shadow-puppet' : craft.category === 'embroidery' ? '/vision-mentor?scenario=embroidery' : '#')}>
               <div className="absolute top-4 right-4 z-10 bg-black/60 text-white text-xs px-2 py-1 rounded-sm font-sans backdrop-blur-sm">热门</div>
               <div className="h-64 overflow-hidden relative">
                 <div className="absolute inset-0 bg-ink-black/10 group-hover:bg-transparent transition-colors z-10"></div>

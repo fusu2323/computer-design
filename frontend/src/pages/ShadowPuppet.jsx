@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import HandTracking from '../components/HandTracking';
 
 const ShadowPuppet = () => {
+  const navigate = useNavigate();
   const [currentTechnique, setCurrentTechnique] = useState(null);
   const [isPracticing, setIsPracticing] = useState(false);
   const [feedback, setFeedback] = useState(null);
@@ -310,7 +312,7 @@ const ShadowPuppet = () => {
                 }}>
                   返回继续练习
                 </Button>
-                <Button variant="outline" onClick={() => window.location.href = '/knowledge-curator'}>
+                <Button variant="outline" onClick={() => navigate('/knowledge-curator')}>
                   了解更多皮影戏知识
                 </Button>
               </div>

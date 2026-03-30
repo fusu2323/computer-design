@@ -2,11 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import HandTracking from '../components/HandTracking';
+import { useToast } from '../hooks/useToast';
+import api from '../services/api';
+import { endpoints } from '../services/endpoints';
 
 const VisionMentor = () => {
+  const toast = useToast();
   const [searchParams] = useSearchParams();
   const scenarioParam = searchParams.get('scenario');
   const [activeScenario, setActiveScenario] = useState(scenarioParam || 'embroidery'); // 'embroidery' | 'clay' | 'shadow'
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
 
   useEffect(() => {
     if (scenarioParam && ['embroidery', 'clay', 'shadow'].includes(scenarioParam)) {
@@ -87,16 +93,13 @@ const VisionMentor = () => {
         }
 
         // Call backend API
-        fetch('http://localhost:8002/api/v1/vision/analyze-pose', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                landmarks: results.multiHandLandmarks,
-                scenario: activeScenario,
-                need_feedback: needFeedback
-            })
+        setIsApiLoading(true);
+        setApiError(null);
+        api.post(endpoints.vision.analyzePose, {
+            landmarks: results.multiHandLandmarks,
+            scenario: activeScenario,
+            need_feedback: needFeedback
         })
-        .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
                 setMetricValue(data.score);
@@ -106,7 +109,14 @@ const VisionMentor = () => {
                 }
             }
         })
-        .catch(err => console.error("Vision API Error:", err));
+        .catch(err => {
+            console.error("Vision API Error:", err);
+            setApiError(err.message);
+            toast.error('视觉分析暂时不可用，请稍后重试');
+        })
+        .finally(() => {
+            setIsApiLoading(false);
+        });
       }
     } else {
       setMetricValue(0);
@@ -178,9 +188,24 @@ const VisionMentor = () => {
 
               {/* The Hand Tracking Component */}
               <HandTracking onResults={handleHandResults} scenario={activeScenario} />
-              
+
+              {/* API Error Overlay */}
+              {apiError && (
+                <div className="absolute inset-0 bg-red-900/70 backdrop-blur-sm flex items-center justify-center z-30 rounded-2xl">
+                  <div className="text-white text-center p-6">
+                    <p className="mb-4 font-bold">视觉分析暂时不可用</p>
+                    <button
+                      onClick={() => setApiError(null)}
+                      className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+                    >
+                      重试
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md text-white px-4 py-3 rounded-xl text-center text-lg shadow-lg border border-white/20">
-                {currentTheme.instruction}
+                {isApiLoading ? '正在分析...' : currentTheme.instruction}
               </div>
             </div>
           </div>

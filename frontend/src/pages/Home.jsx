@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import HomeImage from '../assets/Home.png';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-rice-paper">
       <Navbar />
@@ -30,8 +32,8 @@ const Home = () => {
             </p>
 
             <div className="flex gap-6">
-              <Button onClick={() => window.location.href = '/craft-library'}>开始修习</Button>
-              <Button variant="outline" onClick={() => window.location.href = '/shadow-puppet'}>皮影戏</Button>
+              <Button onClick={() => navigate('/craft-library')}>开始修习</Button>
+              <Button variant="outline" onClick={() => navigate('/shadow-puppet')}>皮影戏</Button>
             </div>
           </div>
 
@@ -179,7 +181,7 @@ const Home = () => {
                     <span className="text-rice-paper/70 text-sm ml-2">经典剧目</span>
                   </div>
                 </div>
-                <Button onClick={() => window.location.href = '/shadow-puppet'}>学习皮影戏</Button>
+                <Button onClick={() => navigate('/shadow-puppet')}>学习皮影戏</Button>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
