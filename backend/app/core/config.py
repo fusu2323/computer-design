@@ -28,8 +28,12 @@ class Settings(BaseSettings):
 
     # Image Generation Settings (Cloud API)
     IMAGE_API_KEY: str = os.getenv("IMAGE_API_KEY", "")
-    IMAGE_API_URL: str = os.getenv("IMAGE_API_URL", "https://api.siliconflow.cn/v1/images/generations")
-    IMAGE_MODEL: str = os.getenv("IMAGE_MODEL", "black-forest-labs/FLUX.1-schnell")
+    IMAGE_API_URL: str = os.getenv("IMAGE_API_URL", "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis")
+    IMAGE_MODEL: str = os.getenv("IMAGE_MODEL", "wanx2.1-imagegen")
+
+    # Alibaba百炼 (DashScope) Settings
+    DASHSCOPE_API_KEY: str = os.getenv("DASHSCOPE_API_KEY", "")
+    DASHSCOPE_BASE_URL: str = os.getenv("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com")
 
     class Config:
         case_sensitive = True

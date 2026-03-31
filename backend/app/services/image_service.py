@@ -1,64 +1,130 @@
+"""
+图片生成服务 - 阿里百炼
+- wanx2.1-imagegen: 标准文生图，POST /services/aigc/text2image/image-synthesis
+- qwen-image-2.0: 多模态模型，POST /services/aigc/multimodal-generation/generation
+文档: https://help.aliyun.com/zh/dashscope/
+"""
+
 import httpx
 from app.core.config import settings
-import json
+
 
 class CloudImageService:
-    """Cloud Image Generation Service (using SiliconFlow/OpenAI compatible API)"""
+    """阿里百炼图片生成服务"""
 
     def __init__(self):
         self.api_key = settings.IMAGE_API_KEY
-        self.api_url = settings.IMAGE_API_URL
-        self.model = settings.IMAGE_MODEL
+        self.model = settings.IMAGE_MODEL  # wanx2.1-imagegen 或 qwen-image-2.0
 
     async def generate_image(self, prompt: str) -> str:
         """
-        Call Cloud Image API to generate an image based on the prompt.
-        
+        调用阿里百炼图片生成 API
+
         Args:
-            prompt: The text prompt for image generation
-            
+            prompt: 英文提示词
+
         Returns:
-            The URL of the generated image
+            生成的图片 URL
         """
         if not self.api_key:
             raise ValueError("IMAGE_API_KEY is not configured in .env file.")
 
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
+        if "wanx" in self.model:
+            return await self._wanx_imagegen(prompt)
+        else:
+            # qwen-image-2.0 使用多模态对话格式
+            return await self._qwen_imagegen(prompt)
 
-        # Compatible payload for SiliconFlow / OpenAI
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "image_size": "1024x1024"
-        }
+    async def _wanx_imagegen(self, prompt: str) -> str:
+        """wanx2.1-imagegen 文生图"""
+        async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:
+            response = await client.post(
+                settings.IMAGE_API_URL,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": self.model,
+                    "input": {"prompt": prompt},
+                    "parameters": {"size": "1024*1024", "n": 1},
+                },
+            )
+            return self._parse_response(response, "wanx")
 
-        try:
-            async with httpx.AsyncClient(timeout=60.0) as client:
-                response = await client.post(
-                    self.api_url,
-                    headers=headers,
-                    json=payload
-                )
-                
-                if response.status_code != 200:
-                    print(f"Image generation failed: {response.text}")
-                    raise Exception(f"API Error {response.status_code}: {response.text}")
+    async def _qwen_imagegen(self, prompt: str) -> str:
+        """
+        qwen-image-2.0 文生图
+        使用多模态对话接口 MultiModalConversation 格式
+        """
+        url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation"
+        async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:
+            response = await client.post(
+                url,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": self.model,
+                    "input": {
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": [{"text": prompt}],
+                            }
+                        ]
+                    },
+                    "parameters": {
+                        "size": "1024*1024",
+                        "n": 1,
+                        "result_format": "message",
+                    },
+                },
+            )
+            return self._parse_response(response, "qwen")
 
-                data = response.json()
-                
-                # Handle different return structures (SiliconFlow vs standard OpenAI)
-                if "images" in data and len(data["images"]) > 0:
-                    return data["images"][0]["url"]
-                elif "data" in data and len(data["data"]) > 0:
-                    return data["data"][0]["url"]
-                else:
-                    raise Exception("Unexpected response format from Image API")
+    def _parse_response(self, response, model_type):
+        """统一解析响应"""
+        if response.status_code != 200:
+            print(f"Image generation failed: {response.status_code} - {response.text}")
+            try:
+                err_data = response.json()
+                code = err_data.get("code", "")
+                msg = err_data.get("message", response.text)
+                raise Exception(f"API Error {code}: {msg}")
+            except Exception:
+                raise Exception(f"API Error {response.status_code}: {response.text}")
 
-        except Exception as e:
-            print(f"Error calling Image API: {e}")
-            raise e
+        data = response.json()
+        print(f"[ImageService] {model_type} response: {data}")
+
+        # wanx2.1-imagegen 返回: { data: { image_url: "..." } }
+        if "data" in data:
+            d = data["data"]
+            if isinstance(d, dict):
+                return d.get("image_url", d.get("url", ""))
+            elif isinstance(d, list) and len(d) > 0:
+                return d[0].get("image_url", d[0].get("url", ""))
+
+        # qwen-image-2.0 返回: { output: { choices: [{message: {content: [{image: "..."}]}}] } }
+        if "output" in data:
+            choices = data["output"].get("choices", [])
+            if choices:
+                content = choices[0].get("message", {}).get("content", [])
+                for item in content:
+                    if item.get("image"):
+                        return item["image"]
+                    if item.get("image_url"):
+                        return item["image_url"]
+
+        # 兜底
+        if "image_url" in data:
+            return data["image_url"]
+        if "url" in data:
+            return data["url"]
+
+        raise Exception(f"无法解析图片生成响应: {data}")
+
 
 cloud_image_service = CloudImageService()
