@@ -4,7 +4,7 @@ import ChatBubble from '../components/ChatBubble';
 import Button from '../components/Button';
 import { endpoints } from '../services/endpoints';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = 'http://localhost:8002';
 
 const MasterWorkshop = () => {
   const [messages, setMessages] = useState([

@@ -1,235 +1,312 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Maximize2, Minimize2, Sparkles, Image as ImageIcon, BookOpen } from 'lucide-react';
-import TaskPipelineVisualizer from './TaskPipelineVisualizer';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { scaleIn } from '../animations/variants';
+import { Sparkles, Eye, BookOpen, Palette, X, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const API_BASE = 'http://localhost:8002';
+
+// Agent tile configuration
+const AGENTS = [
+  {
+    id: 'vision',
+    name: '视觉导师',
+    icon: Eye,
+    color: 'cyan-glaze',
+    border: 'border-cyan-glaze',
+    bg: 'bg-cyan-glaze',
+    description: '手眼身法，姿态纠正',
+    route: '/vision-mentor'
+  },
+  {
+    id: 'knowledge',
+    name: '知识馆长',
+    icon: BookOpen,
+    color: 'tea-green',
+    border: 'border-tea-green',
+    bg: 'bg-tea-green',
+    description: '博古通今，知识图谱',
+    route: '/knowledge-curator'
+  },
+  {
+    id: 'creative',
+    name: '创意艺匠',
+    icon: Palette,
+    color: 'vermilion',
+    border: 'border-vermilion',
+    bg: 'bg-vermilion',
+    description: '妙笔生花，风格复原',
+    route: '/creative-workshop'
+  }
+];
 
 const OmniOrchestrator = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [query, setQuery] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [error, setError] = useState(null);
+  const inputRef = useRef(null);
+  const navigate = useNavigate();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Cmd+K / Ctrl+K to open
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading]);
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Focus input when opened
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+      setResult(null);
+      setError(null);
+      setQuery('');
+      setSelectedAgent(null);
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (!query.trim() || isLoading) return;
-
-    const userMessage = { role: 'user', content: query };
-    setMessages(prev => [...prev, userMessage]);
-    setQuery('');
     setIsLoading(true);
+    setError(null);
+    setResult(null);
 
     try {
-      const response = await fetch('http://localhost:8002/api/v1/orchestrator/process', {
+      const sessionId = localStorage.getItem('orchestrator_session_id') || `session-${Date.now()}`;
+      localStorage.setItem('orchestrator_session_id', sessionId);
+
+      const response = await fetch(`${API_BASE}/api/v1/orchestrator/process`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: userMessage.content, history: messages }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: query.trim(),
+          session_id: sessionId,
+          history: []
+        })
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
+      if (!response.ok) throw new Error('Orchestrator request failed');
       const data = await response.json();
-      
-      const assistantMessage = {
-        role: 'assistant',
-        content: data.final_answer,
-        intent: data.intent?.intent,
-        tasks: data.tasks,
-        results: data.results,
-        isError: false
-      };
-      
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Orchestrator Error:', error);
-      const errorMessage = {
-        role: 'assistant',
-        content: '抱歉，系统处理您的请求时遇到了问题，请稍后再试。',
-        isError: true
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      setResult(data);
+    } catch (err) {
+      console.error('Orchestrator error:', err);
+      setError('抱歉，服务暂时不可用，请稍后再试。');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-    if (isExpanded) setIsExpanded(false);
+  const handleAgentSelect = (agent) => {
+    setSelectedAgent(agent);
+    inputRef.current?.focus();
   };
 
-  const renderMessageContent = (msg) => {
-    if (msg.role === 'user') {
-      return <div className="text-sm whitespace-pre-wrap">{msg.content}</div>;
-    }
+  const handleNavigate = (route) => {
+    navigate(route);
+    setIsOpen(false);
+  };
 
-    return (
-      <div className="flex flex-col space-y-3 w-full">
-        {/* Render final answer */}
-        <div className="text-sm markdown-wrapper">
-           <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-        </div>
-        
-        {/* Render generated images if any */}
-        {msg.results && Object.entries(msg.results).map(([taskId, result]) => {
-          if (typeof result === 'string' && (result.startsWith('http') || result.startsWith('data:image'))) {
-             return (
-                <div key={taskId} className="mt-2 rounded-md overflow-hidden border border-gray-200">
-                   <img src={result} alt="Generated result" className="w-full h-auto object-cover max-h-64" />
-                </div>
-             );
-          }
-          return null;
-        })}
-
-        {/* Render Task Pipeline if available */}
-        {(msg.intent || (msg.tasks && msg.tasks.length > 0)) && (
-          <div className="mt-2 border-t border-gray-100 pt-2">
-            <details className="group">
-              <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700 flex items-center">
-                <Sparkles size={12} className="mr-1" />
-                查看调度详情
-              </summary>
-              <div className="mt-2">
-                <TaskPipelineVisualizer intent={msg.intent} tasks={msg.tasks} />
-              </div>
-            </details>
-          </div>
-        )}
-      </div>
-    );
+  const handleClose = () => {
+    setIsOpen(false);
+    setResult(null);
+    setError(null);
+    setQuery('');
+    setSelectedAgent(null);
   };
 
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Navbar 印章 Trigger Button */}
       <button
-        onClick={toggleOpen}
-        className={`fixed bottom-6 right-6 z-[60] w-14 h-14 rounded-full bg-vermilion text-white shadow-xl flex items-center justify-center hover:scale-105 transition-transform duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        onClick={() => setIsOpen(true)}
+        className="fixed top-6 right-6 z-[70] w-12 h-12 rounded-full bg-vermilion text-white shadow-xl flex items-center justify-center hover:scale-105 transition-transform duration-300"
+        title="打开传承指令面板 (⌘K)"
       >
-        <Bot size={28} />
+        <div className="font-calligraphy text-xl">承</div>
       </button>
 
-      {/* Main Chat Window */}
-      <div
-        className={`fixed z-[60] bottom-6 right-6 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col transition-all duration-300 ease-in-out transform origin-bottom-right
-          ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}
-          ${isExpanded ? 'w-[800px] h-[80vh] max-w-[90vw]' : 'w-[400px] h-[600px] max-w-[90vw]'}
-        `}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50/80 rounded-t-lg">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-vermilion/10 text-vermilion flex items-center justify-center">
-              <Sparkles size={18} />
-            </div>
-            <div>
-              <h3 className="font-xiaowei text-lg text-gray-800">全能智能助理</h3>
-              <p className="text-[10px] text-gray-500 font-sans">Multi-Agent Orchestrator</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-gray-400">
-            <button onClick={() => setIsExpanded(!isExpanded)} className="hover:text-gray-700 p-1">
-              {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            </button>
-            <button onClick={toggleOpen} className="hover:text-gray-700 p-1">
-              <X size={20} />
-            </button>
-          </div>
-        </div>
+      {/* Command Palette Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-ink-black/70 backdrop-blur-sm z-[80]"
+              onClick={handleClose}
+            />
 
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-60">
-              <Bot size={48} className="text-gray-300" />
-              <div className="text-sm text-gray-500">
-                <p>你好！我是您的数字传承人全能助理。</p>
-                <p className="mt-1">您可以让我帮您：</p>
-                <div className="flex flex-col items-start mt-4 space-y-2 text-xs bg-white p-4 rounded-md shadow-sm">
-                  <span className="flex items-center gap-2"><BookOpen size={14} className="text-blue-500"/> 查询非遗知识或历史</span>
-                  <span className="flex items-center gap-2"><ImageIcon size={14} className="text-vermilion"/> 创作非遗风格的图像</span>
-                  <span className="flex items-center gap-2"><Sparkles size={14} className="text-yellow-500"/> 制定非遗学习计划</span>
+            {/* Palette Panel */}
+            <motion.div
+              variants={scaleIn}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="fixed inset-0 z-[90] flex items-start justify-center pt-[10vh] px-4 pointer-events-none"
+            >
+              <div
+                className="w-full max-w-2xl bg-rice-paper rounded-xl shadow-2xl border border-ink-black/10 overflow-hidden pointer-events-auto"
+                style={{
+                  backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23000000\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
+                }}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between px-8 py-6 border-b border-ink-black/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-vermilion to-amber-600 rounded-full flex items-center justify-center text-white font-calligraphy text-lg shadow-lg">
+                      承
+                    </div>
+                    <div>
+                      <h2 className="font-xiaowei text-xl text-ink-black">传承指令面板</h2>
+                      <p className="text-xs text-charcoal/50 font-serif">输入您的需求，智能调度 Agent</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleClose}
+                    className="w-8 h-8 rounded-full bg-ink-black/5 hover:bg-ink-black/10 flex items-center justify-center text-charcoal/60 hover:text-ink-black transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
                 </div>
-                <p className="mt-4 text-xs italic">试试发送："我想学苏绣，并生成一张牡丹图"</p>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {messages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  {msg.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 mr-2 flex items-center justify-center text-gray-500">
-                      <Bot size={16} />
+
+                {/* Agent Tiles */}
+                <div className="px-8 py-5 border-b border-ink-black/5 bg-ink-black/[0.02]">
+                  <p className="text-xs text-charcoal/40 font-serif mb-3">选择导师，或直接输入问题</p>
+                  <div className="flex gap-3">
+                    {AGENTS.map(agent => {
+                      const Icon = agent.icon;
+                      const isSelected = selectedAgent?.id === agent.id;
+                      return (
+                        <button
+                          key={agent.id}
+                          onClick={() => handleAgentSelect(agent)}
+                          className={`flex-1 flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
+                            isSelected
+                              ? `${agent.border} ${agent.bg}/10 shadow-md`
+                              : 'border-ink-black/5 bg-white hover:border-ink-black/20'
+                          }`}
+                        >
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            isSelected ? agent.bg : 'bg-ink-black/5'
+                          }`}>
+                            <Icon size={22} className={isSelected ? 'text-white' : 'text-charcoal/60'} />
+                          </div>
+                          <div className="text-center">
+                            <div className={`font-xiaowei text-sm ${isSelected ? `text-${agent.color}` : 'text-ink-black'}`}>
+                              {agent.name}
+                            </div>
+                            <div className="text-xs text-charcoal/40 font-serif mt-0.5">{agent.description}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Input */}
+                <form onSubmit={handleSubmit} className="px-8 py-6">
+                  <div className="relative">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={query}
+                      onChange={e => setQuery(e.target.value)}
+                      placeholder={selectedAgent ? `问${selectedAgent.name}一个问题...` : '描述您想学什么，或想创作什么...'}
+                      disabled={isLoading}
+                      className="w-full px-6 py-4 bg-white border-2 border-ink-black/10 rounded-xl text-ink-black font-serif text-base focus:outline-none focus:border-vermilion transition-colors placeholder:text-charcoal/30 disabled:opacity-50"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!query.trim() || isLoading}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-vermilion hover:bg-vermilion/90 disabled:bg-ink-black/10 disabled:text-charcoal/30 text-white rounded-lg flex items-center justify-center transition-colors"
+                    >
+                      {isLoading ? (
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <ArrowRight size={18} />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Error */}
+                  {error && (
+                    <div className="mt-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm font-serif">
+                      {error}
                     </div>
                   )}
-                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm ${
-                    msg.role === 'user' 
-                      ? 'bg-vermilion text-white rounded-tr-sm' 
-                      : msg.isError 
-                        ? 'bg-red-50 text-red-600 border border-red-100 rounded-tl-sm'
-                        : 'bg-white border border-gray-100 rounded-tl-sm text-gray-800'
-                  }`}>
-                    {renderMessageContent(msg)}
-                  </div>
-                </div>
-              ))}
-              
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 mr-2 flex items-center justify-center text-gray-500">
-                    <Bot size={16} />
-                  </div>
-                  <div className="bg-white border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm flex items-center space-x-2">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                    </div>
-                    <span className="text-xs text-gray-500 ml-2">正在协调多个 Agent 处理中...</span>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-        </div>
 
-        {/* Input Area */}
-        <div className="p-4 border-t border-gray-100 bg-white rounded-b-lg">
-          <form onSubmit={handleSubmit} className="relative flex items-center">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="输入任何复杂的指令..."
-              disabled={isLoading}
-              className="w-full bg-gray-100 border-transparent rounded-full pl-4 pr-12 py-3 text-sm focus:bg-white focus:border-vermilion focus:ring-2 focus:ring-vermilion/20 transition-all disabled:opacity-50 outline-none"
-            />
-            <button
-              type="submit"
-              disabled={!query.trim() || isLoading}
-              className="absolute right-2 p-2 rounded-full text-vermilion hover:bg-vermilion/10 disabled:text-gray-400 disabled:hover:bg-transparent transition-colors"
-            >
-              <Send size={18} />
-            </button>
-          </form>
-        </div>
-      </div>
+                  {/* Result Card */}
+                  {result && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 p-6 bg-white border-l-4 border-vermilion rounded-xl shadow-lg"
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="w-8 h-8 bg-vermilion/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Sparkles size={16} className="text-vermilion" />
+                        </div>
+                        <div className="flex-grow">
+                          <div className="font-xiaowei text-sm text-vermilion mb-1">主协调员</div>
+                          <div className="font-serif text-ink-black leading-relaxed whitespace-pre-wrap">
+                            {result.final_answer || '处理完成'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Agent dispatch cards */}
+                      {result.tasks && result.tasks.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-ink-black/5">
+                          <div className="text-xs text-charcoal/40 font-serif mb-3">已调度：</div>
+                          <div className="flex flex-wrap gap-2">
+                            {result.tasks.map((task, idx) => {
+                              const agent = AGENTS.find(a => a.id === task.agent);
+                              if (!agent) return null;
+                              const Icon = agent.icon;
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleNavigate(agent.route)}
+                                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${agent.border} bg-white hover:${agent.bg}/5 transition-colors text-sm`}
+                                >
+                                  <Icon size={14} />
+                                  <span className="font-xiaowei">{agent.name}</span>
+                                  <span className="text-charcoal/60 font-serif text-xs">→</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </form>
+
+                {/* Footer hint */}
+                <div className="px-8 pb-5 text-center">
+                  <span className="text-xs text-charcoal/30 font-serif">按 </span>
+                  <kbd className="text-xs bg-ink-black/5 px-1.5 py-0.5 rounded font-mono">Esc</kbd>
+                  <span className="text-xs text-charcoal/30 font-serif"> 关闭 · </span>
+                  <kbd className="text-xs bg-ink-black/5 px-1.5 py-0.5 rounded font-mono">⌘K</kbd>
+                  <span className="text-xs text-charcoal/30 font-serif"> 打开</span>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
