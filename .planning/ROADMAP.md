@@ -5,8 +5,8 @@
 | Phase | Name | Status | Description |
 |-------|------|--------|-------------|
 | 0 | 体验完整性优化 | ✓ | Toast、API 层、ErrorBoundary、导航统一 |
-| 1 | UI 增强与优化 | ◆ | 东方美学、动画、性能、组件结构 |
-| 2 | 功能增强 | ○ | 新交互、新功能、Agent 能力增强 |
+| 1 | UI 增强与优化 | ✓ | 东方美学、动画、性能、组件结构 |
+| 2 | 功能增强 | ◆ | 新交互、新功能、Agent 能力增强 |
 | 3 | 集成与测试 | ○ | 系统集成、UAT |
 
 ---
@@ -48,6 +48,47 @@
 - `b0a5a0e` — StaggerContainer (viewport-triggered stagger animations)
 - `fde4640` — ChatBubble (user/assistant bubbles, typing indicator)
 - `c3107ec` — Navbar enhancement (scroll blur, mobile menu, active indicator)
+
+---
+
+## Phase 2: 功能增强
+
+### Goals
+- Vision Mentor: Focus ONLY on shadow puppet (皮影戏), angle-based evaluation, localStorage history
+- Master Orchestrator: Transform MasterWorkshop.jsx to chat UI with orchestrator backend
+- My Practice: Replace mock data with real localStorage-driven data
+
+### Requirements Addressed
+- **D-01:** Remove embroidery/clay scenarios — focus only on shadow puppet
+- **D-02:** Optimize shadow puppet evaluation with angle-based detection
+- **D-03:** Practice session history via localStorage
+- **D-04:** Transform MasterWorkshop.jsx to orchestrator chat UI
+- **D-05:** Natural language input routed via orchestrator backend
+- **D-06:** Dedicated chat interface (not floating button)
+- **D-07:** Anonymous sessions via localStorage
+- **D-08:** Replace mock data with real localStorage data
+
+### Plans
+- [ ] 02-01-PLAN.md — Vision Mentor: Shadow focus + angle-based algorithm + localStorage history
+- [ ] 02-02-PLAN.md — Master Workshop: Orchestrator chat UI
+- [ ] 02-03-PLAN.md — My Practice: localStorage-driven data
+
+### Wave Status
+
+| Wave | Plans | Status |
+|------|-------|--------|
+| Wave 1: Vision + Orchestrator + Profile | 02-01, 02-02, 02-03 | ○ Planned |
+
+---
+
+## Phase 3: 集成与测试
+
+### Goals
+- System integration and end-to-end testing
+- User acceptance testing (UAT)
+
+### Status
+- Not yet planned
 
 ---
 
