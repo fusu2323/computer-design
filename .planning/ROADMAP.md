@@ -69,15 +69,15 @@
 - **D-08:** Replace mock data with real localStorage data
 
 ### Plans
-- [ ] 02-01-PLAN.md — Vision Mentor: Shadow focus + angle-based algorithm + localStorage history
-- [ ] 02-02-PLAN.md — Master Workshop: Orchestrator chat UI
-- [ ] 02-03-PLAN.md — My Practice: localStorage-driven data
+- [x] 02-01-PLAN.md — Vision Mentor: Shadow focus + angle-based algorithm + localStorage history
+- [x] 02-02-PLAN.md — Master Workshop: Orchestrator chat UI
+- [x] 02-03-PLAN.md — My Practice: localStorage-driven data
 
 ### Wave Status
 
 | Wave | Plans | Status |
 |------|-------|--------|
-| Wave 1: Vision + Orchestrator + Profile | 02-01, 02-02, 02-03 | ○ Planned |
+| Wave 1: Vision + Orchestrator + Profile | 02-01, 02-02, 02-03 | ◆ Ready to execute |
 
 ---
 
