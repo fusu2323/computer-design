@@ -1,20 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import CraftLibrary from './pages/CraftLibrary'
-import KnowledgeCurator from './pages/KnowledgeCurator'
-import MasterWorkshop from './pages/MasterWorkshop'
-import MyPractice from './pages/MyPractice'
-import VisionMentor from './pages/VisionMentor'
-import ShadowPuppet from './pages/ShadowPuppet'
-import CreativeWorkshop from './pages/CreativeWorkshop'
-import OmniOrchestrator from './components/OmniOrchestrator'
-import ToastProvider from './components/ToastProvider'
-import ErrorBoundary from './components/ErrorBoundary'
-import './index.css'
+import React, { lazy, Suspense } from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import OmniOrchestrator from './components/OmniOrchestrator';
+import ToastProvider from './components/ToastProvider';
+import ErrorBoundary from './components/ErrorBoundary';
+import LoadingSkeleton from './components/LoadingSkeleton';
+import './index.css';
 
-import Intro from './pages/Intro'
+// Page imports — eager loaded (Home and Intro stay synchronous)
+import Intro from './pages/Intro';
+import Home from './pages/Home';
+
+// Lazy-loaded pages for code splitting
+const CraftLibrary = lazy(() => import('./pages/CraftLibrary'));
+const KnowledgeCurator = lazy(() => import('./pages/KnowledgeCurator'));
+const MasterWorkshop = lazy(() => import('./pages/MasterWorkshop'));
+const MyPractice = lazy(() => import('./pages/MyPractice'));
+const VisionMentor = lazy(() => import('./pages/VisionMentor'));
+const ShadowPuppet = lazy(() => import('./pages/ShadowPuppet'));
+const CreativeWorkshop = lazy(() => import('./pages/CreativeWorkshop'));
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -22,21 +26,23 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ToastProvider>
         <Router>
           <OmniOrchestrator />
-          <Routes>
-            <Route path="/" element={<Intro />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/craft-library" element={<CraftLibrary />} />
-            <Route path="/master-workshop" element={<MasterWorkshop />} />
-            <Route path="/my-practice" element={<MyPractice />} />
-            <Route path="/vision-mentor" element={<VisionMentor />} />
-            <Route path="/knowledge-curator" element={<KnowledgeCurator />} />
-            <Route path="/knowledge" element={<KnowledgeCurator />} />
-            <Route path="/shadow-puppet" element={<ShadowPuppet />} />
-            <Route path="/creative-workshop" element={<CreativeWorkshop />} />
-            <Route path="/creative-artisan" element={<CreativeWorkshop />} />
-          </Routes>
+          <Suspense fallback={<LoadingSkeleton variant="page" />}>
+            <Routes>
+              <Route path="/" element={<Intro />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/craft-library" element={<CraftLibrary />} />
+              <Route path="/master-workshop" element={<MasterWorkshop />} />
+              <Route path="/my-practice" element={<MyPractice />} />
+              <Route path="/vision-mentor" element={<VisionMentor />} />
+              <Route path="/knowledge-curator" element={<KnowledgeCurator />} />
+              <Route path="/knowledge" element={<KnowledgeCurator />} />
+              <Route path="/shadow-puppet" element={<ShadowPuppet />} />
+              <Route path="/creative-workshop" element={<CreativeWorkshop />} />
+              <Route path="/creative-artisan" element={<CreativeWorkshop />} />
+            </Routes>
+          </Suspense>
         </Router>
       </ToastProvider>
     </ErrorBoundary>
   </React.StrictMode>,
-)
+);
