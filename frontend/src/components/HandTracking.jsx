@@ -36,10 +36,10 @@ const HandTracking = ({ onResults, scenario }) => {
       
       if (results.multiHandLandmarks) {
         for (const landmarks of results.multiHandLandmarks) {
-          // Choose colors based on scenario
-          const connectorColor = scenario === 'embroidery' ? '#5796B3' : '#C04851'; // Cyan vs Vermilion
-          const landmarkColor = scenario === 'embroidery' ? '#CCD4BF' : '#F7F5F0'; // Tea Green vs Rice Paper
-          
+          // Shadow puppet theme - amber/gold tones
+          const connectorColor = '#D97706'; // Amber accent
+          const landmarkColor = '#F7F5F0'; // Rice paper white
+
           drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: connectorColor, lineWidth: 5 });
           drawLandmarks(canvasCtx, landmarks, { color: landmarkColor, lineWidth: 2 });
         }

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
-import math
+import numpy as np
 from app.services.llm_service import LangChainService
 
 router = APIRouter()
@@ -14,80 +14,74 @@ class Landmark(BaseModel):
 
 class PoseRequest(BaseModel):
     landmarks: List[List[Landmark]]  # Support multiple hands
-    scenario: str  # 'embroidery', 'clay', 'shadow'
+    scenario: str  # 'shadow' only
     need_feedback: bool = False
 
-def calculate_distance(p1: Landmark, p2: Landmark) -> float:
-    return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2 + (p1.z - p2.z)**2)
-
-def evaluate_embroidery(hand: List[Landmark]) -> Dict[str, Any]:
-    # Su Embroidery: Pinching a needle
-    # Thumb (4) and Index (8) should be close
-    thumb_tip = hand[4]
-    index_tip = hand[8]
-    distance = calculate_distance(thumb_tip, index_tip)
-    
-    # Perfect distance is around 0.02 - 0.05
-    if distance < 0.02:
-        score = 80
-        msg = "捏得太紧了，注意放松。"
-    elif distance > 0.15:
-        score = max(0, 100 - (distance - 0.15) * 500)
-        msg = "手指张得太开了，请捏合食指和拇指。"
-    else:
-        score = 100 - abs(distance - 0.04) * 200
-        msg = "姿势非常标准！"
-        
-    return {"score": min(100, max(0, int(score))), "hint": msg}
-
-def evaluate_clay(hand: List[Landmark]) -> Dict[str, Any]:
-    # Purple Clay: Flat palm for slapping clay
-    # All fingertips (8, 12, 16, 20) should be relatively far from wrist (0) and straight
-    wrist = hand[0]
-    distances = [calculate_distance(wrist, hand[i]) for i in [8, 12, 16, 20]]
-    avg_dist = sum(distances) / len(distances)
-    
-    # Also check if fingers are close to each other (flat hand)
-    spread = calculate_distance(hand[8], hand[20])
-    
-    score = 0
-    msg = ""
-    if avg_dist < 0.3:
-        score = 40
-        msg = "手掌没有完全张开，请伸直手指。"
-    elif spread > 0.3:
-        score = 70
-        msg = "手指分得太开了，请并拢手指形成平整的拍子。"
-    else:
-        score = min(100, avg_dist * 200)
-        msg = "手掌平整，发力面积好！"
-        
-    return {"score": min(100, max(0, int(score))), "hint": msg}
+def _calculate_angle(p1, p2, p3):
+    """Calculate angle at vertex p2 (p1-p2-p3), returns degrees."""
+    a = np.array([p1.x, p1.y])
+    b = np.array([p2.x, p2.y])
+    c = np.array([p3.x, p3.y])
+    ba = a - b
+    bc = c - b
+    dot = np.dot(ba, bc)
+    mag_a = np.linalg.norm(ba)
+    mag_b = np.linalg.norm(bc)
+    cos_angle = dot / (mag_a * mag_b + 1e-6)
+    angle = np.arccos(np.clip(cos_angle, -1.0, 1.0))
+    return np.degrees(angle)
 
 def evaluate_shadow(hand: List[Landmark]) -> Dict[str, Any]:
-    # Shadow Puppet: "Rabbit" (兔子)
-    # Index (8) and Middle (12) extended. Thumb (4), Ring (16), Pinky (20) pinched together.
+    """
+    Shadow Puppet: Rabbit hand (兔子)
+    Index (8) and Middle (12) extended UP.
+    Thumb (4), Ring (16), Pinky (20) pinched together.
+    Uses MCP joint angles for camera-distance invariant detection.
+    """
     wrist = hand[0]
-    # Check extension of index and middle
-    d_index = calculate_distance(wrist, hand[8])
-    d_middle = calculate_distance(wrist, hand[12])
-    
-    # Check pinch of thumb, ring, pinky
-    d_pinch1 = calculate_distance(hand[4], hand[16])
-    d_pinch2 = calculate_distance(hand[4], hand[20])
-    
+    index_mcp = hand[5]
+    index_pip = hand[6]
+    middle_mcp = hand[9]
+    middle_pip = hand[10]
+    ring_mcp = hand[13]
+    ring_pip = hand[14]
+    pinky_mcp = hand[17]
+    pinky_pip = hand[18]
+    thumb_mcp = hand[2]
+    thumb_ip = hand[3]
+
+    # Calculate MCP angles
+    index_angle = _calculate_angle(wrist, index_mcp, index_pip)
+    middle_angle = _calculate_angle(wrist, middle_mcp, middle_pip)
+    ring_angle = _calculate_angle(wrist, ring_mcp, ring_pip)
+    pinky_angle = _calculate_angle(wrist, pinky_mcp, pinky_pip)
+    thumb_angle = _calculate_angle(wrist, thumb_mcp, thumb_ip)
+
     score = 0
-    msg = ""
-    if d_index < 0.3 or d_middle < 0.3:
-        score = 50
-        msg = "请把食指和中指竖直，像兔子的耳朵。"
-    elif d_pinch1 > 0.15 or d_pinch2 > 0.15:
-        score = 60
-        msg = "请把拇指、无名指和小指捏在一起，作为兔子的嘴巴。"
+    # Extended fingers (should be ~180 degrees)
+    if index_angle > 150:
+        score += 25
+    if middle_angle > 150:
+        score += 25
+    # Curled fingers (should be < 110 degrees)
+    if ring_angle < 110:
+        score += 20
+    if pinky_angle < 110:
+        score += 20
+    # Thumb tucked across palm (reduced angle)
+    if thumb_angle < 120:
+        score += 10
+
+    if score >= 85:
+        msg = "完美的兔子手影！姿势非常标准！"
+    elif score >= 60:
+        if index_angle <= 150 and middle_angle <= 150:
+            msg = "请把食指和中指竖直，像兔子的耳朵。"
+        else:
+            msg = "请把拇指、无名指和小指捏在一起。"
     else:
-        score = 90 + (0.15 - max(d_pinch1, d_pinch2)) * 100
-        msg = "很棒的兔子手影！"
-        
+        msg = "请调整手势，竖起食指和中指，捏合其他三指。"
+
     return {"score": min(100, max(0, int(score))), "hint": msg}
 
 @router.post("/analyze-pose")
@@ -102,11 +96,7 @@ async def analyze_pose(request: PoseRequest):
         
     hand = request.landmarks[0] # Use the first hand detected
     
-    if request.scenario == 'embroidery':
-        result = evaluate_embroidery(hand)
-    elif request.scenario == 'clay':
-        result = evaluate_clay(hand)
-    elif request.scenario == 'shadow':
+    if request.scenario == 'shadow':
         result = evaluate_shadow(hand)
     else:
         result = {"score": 0, "hint": "未知场景"}

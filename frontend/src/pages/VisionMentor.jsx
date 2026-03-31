@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import HandTracking from '../components/HandTracking';
 import { useToast } from '../hooks/useToast';
@@ -8,57 +7,70 @@ import { endpoints } from '../services/endpoints';
 
 const VisionMentor = () => {
   const toast = useToast();
-  const [searchParams] = useSearchParams();
-  const scenarioParam = searchParams.get('scenario');
-  const [activeScenario, setActiveScenario] = useState(scenarioParam || 'embroidery'); // 'embroidery' | 'clay' | 'shadow'
   const [isApiLoading, setIsApiLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
 
-  useEffect(() => {
-    if (scenarioParam && ['embroidery', 'clay', 'shadow'].includes(scenarioParam)) {
-      setActiveScenario(scenarioParam);
-    }
-  }, [scenarioParam]);
-  
   const [metricValue, setMetricValue] = useState(0); // 0-100
   const [feedbackMessage, setFeedbackMessage] = useState('等待检测...');
   const [aiFeedback, setAiFeedback] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
-  
+  const [sessionId, setSessionId] = useState(null);
+  const [sessionStartTime, setSessionStartTime] = useState(null);
+
   const lastApiCallTime = useRef(0);
   const highScoreStartTime = useRef(null);
 
-  // Reset states when scenario changes
+  // Session initialization
   useEffect(() => {
-    setMetricValue(0);
-    setFeedbackMessage('等待检测...');
-    setAiFeedback('');
-    setIsUnlocked(false);
-    highScoreStartTime.current = null;
-  }, [activeScenario]);
+    let storedSessionId = localStorage.getItem('vision_session_id');
+    if (!storedSessionId) {
+      storedSessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('vision_session_id', storedSessionId);
+    }
+    setSessionId(storedSessionId);
+    setSessionStartTime(Date.now());
+  }, []);
 
-  // Theme configuration based on scenario
+  // Save practice session to localStorage
+  const savePracticeSession = (score, duration) => {
+    const sessions = JSON.parse(localStorage.getItem('vision_sessions') || '[]');
+    const newSession = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      score,
+      duration,
+      scenario: 'shadow'
+    };
+    sessions.push(newSession);
+    // Keep last 50 sessions
+    const trimmed = sessions.slice(-50);
+    localStorage.setItem('vision_sessions', JSON.stringify(trimmed));
+  };
+
+  // Reset states when unlocked and save session
+  useEffect(() => {
+    if (isUnlocked) {
+      const duration = sessionStartTime ? Math.round((Date.now() - sessionStartTime) / 1000) : 0;
+      savePracticeSession(metricValue, duration);
+      setMetricValue(0);
+      setFeedbackMessage('等待检测...');
+      setAiFeedback('');
+      highScoreStartTime.current = null;
+    }
+  }, [isUnlocked]);
+
+  // Reset states when unlocked
+  useEffect(() => {
+    if (isUnlocked) {
+      setMetricValue(0);
+      setFeedbackMessage('等待检测...');
+      setAiFeedback('');
+      highScoreStartTime.current = null;
+    }
+  }, [isUnlocked]);
+
+  // Theme configuration - shadow puppet only
   const theme = {
-    embroidery: {
-      title: '苏绣 · 捏针手势',
-      color: 'cyan-glaze',
-      accent: '#5796B3',
-      bg: 'bg-cyan-glaze/10',
-      border: 'border-cyan-glaze',
-      text: 'text-cyan-glaze',
-      icon: '🪡',
-      instruction: '请将食指与拇指轻轻捏合，模仿拿针的姿势。',
-    },
-    clay: {
-      title: '紫砂 · 拍泥手势',
-      color: 'vermilion',
-      accent: '#C04851',
-      bg: 'bg-vermilion/10',
-      border: 'border-vermilion',
-      text: 'text-vermilion',
-      icon: '🏺',
-      instruction: '请伸直五指并拢，展示平整的拍泥手掌。',
-    },
     shadow: {
       title: '皮影 · 飞兔手影',
       color: 'amber-600',
@@ -71,7 +83,7 @@ const VisionMentor = () => {
     }
   };
 
-  const currentTheme = theme[activeScenario];
+  const currentTheme = theme.shadow;
 
   const handleHandResults = (results) => {
     if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
@@ -97,7 +109,7 @@ const VisionMentor = () => {
         setApiError(null);
         api.post(endpoints.vision.analyzePose, {
             landmarks: results.multiHandLandmarks,
-            scenario: activeScenario,
+            scenario: 'shadow',
             need_feedback: needFeedback
         })
         .then(data => {
@@ -151,27 +163,6 @@ const VisionMentor = () => {
               挑战大师手势！通过摄像头实时比对您的动作，解锁非遗专属成就。
             </p>
           </div>
-          
-          {/* Scenario Switcher */}
-          <div className="flex flex-wrap gap-4 mt-6 md:mt-0">
-            {Object.keys(theme).map((key) => (
-                <button
-                key={key}
-                onClick={() => setActiveScenario(key)}
-                className={`px-5 py-2 rounded-full border-2 transition-all duration-300 flex items-center gap-2 font-bold ${
-                    activeScenario === key
-                    ? `bg-[${theme[key].accent}] text-white border-[${theme[key].accent}] shadow-lg transform -translate-y-1`
-                    : 'bg-transparent text-ink-black/60 border-ink-black/20 hover:border-ink-black hover:text-ink-black'
-                }`}
-                style={{
-                    backgroundColor: activeScenario === key ? theme[key].accent : 'transparent',
-                    borderColor: activeScenario === key ? theme[key].accent : ''
-                }}
-                >
-                <span>{theme[key].icon}</span> {theme[key].title.split('·')[0]}模式
-                </button>
-            ))}
-          </div>
         </div>
 
         {/* Main Content Grid */}
@@ -187,7 +178,7 @@ const VisionMentor = () => {
               <div className={`absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 ${currentTheme.border} translate-x-1 translate-y-1 rounded-br-lg`}></div>
 
               {/* The Hand Tracking Component */}
-              <HandTracking onResults={handleHandResults} scenario={activeScenario} />
+              <HandTracking onResults={handleHandResults} scenario={'shadow'} />
 
               {/* API Error Overlay */}
               {apiError && (
