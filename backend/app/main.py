@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.endpoints import vision_mentor, knowledge_curator, creative_artisan, orchestrator, user_profile, certificate
+from app.api.endpoints import vision_mentor, knowledge_curator, creative_artisan, orchestrator, user_profile, certificate, deepseek_chat
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -23,6 +23,7 @@ app.include_router(creative_artisan.router, prefix=f"{settings.API_V1_STR}/creat
 app.include_router(orchestrator.router, prefix=f"{settings.API_V1_STR}/orchestrator", tags=["Orchestrator"])
 app.include_router(user_profile.router, prefix=f"{settings.API_V1_STR}/user", tags=["User Profile"])
 app.include_router(certificate.router, prefix=f"{settings.API_V1_STR}/certificate", tags=["Certificate"])
+app.include_router(deepseek_chat.router, prefix="/api/deepseek/v1", tags=["DeepSeek Chat"])
 
 @app.get("/")
 def root():

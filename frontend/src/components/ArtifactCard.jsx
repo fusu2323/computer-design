@@ -61,7 +61,7 @@ const ArtifactCard = ({ data, onDownload }) => {
 
         {/* Poem */}
         <div className="text-center mb-6 font-calligraphy text-xl text-ink-black/90 leading-relaxed whitespace-pre-line">
-          {data.poem.split('。').join('。\n')}
+          {(data.poem || '').split('。').join('。\n')}
         </div>
 
         {/* Description */}
