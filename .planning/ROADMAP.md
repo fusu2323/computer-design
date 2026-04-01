@@ -54,7 +54,10 @@
 4. User can tap "导航" button to open WeChat map with navigation to selected site
 5. Map uses GCJ-02 coordinate system (verified via wx.getLocation({type: 'gcj02'}))
 
-**Plans:** TBD
+**Plans:** 2/2 plans ready
+**Plan list:**
+- [ ] 03-01-PLAN.md — Backend API (map endpoints + coordinate seeding)
+- [ ] 03-02-PLAN.md — Frontend Map Page (map UI + utilities + bottom sheet)
 
 **UI hint:** yes
 
@@ -86,7 +89,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 2. 小程序基础架构 | 3/3 | Complete   | 2026-04-01 |
-| 3. 全国非遗地图 + LBS | 0/1 | Not started | - |
+| 3. 全国非遗地图 + LBS | 0/2 | Planning complete | - |
 | 4. 微创作 + 分享 | 0/1 | Not started | - |
 
 ---
