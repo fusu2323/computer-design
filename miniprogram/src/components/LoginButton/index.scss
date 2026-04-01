@@ -1,0 +1,16 @@
+.login-btn {
+  background: var(--color-vermilion);
+  color: var(--color-white);
+  font-family: var(--font-xiaowei);
+  font-size: var(--font-size-body);
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 24rpx;
+  border: none;
+  margin: var(--space-md) var(--space-sm);
+  width: calc(100% - var(--space-sm) * 2);
+}
+
+.btn-text {
+  color: var(--color-white);
+}
