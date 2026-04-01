@@ -1,0 +1,108 @@
+<!-- pages/map/index.wxml - National ICH Map Page -->
+<view class="map-page">
+
+  <!-- Full-screen map (D-01: WeChat native map component) -->
+  <map
+    id="mainMap"
+    class="map-container"
+    latitude="{{mapCenter.latitude}}"
+    longitude="{{mapCenter.longitude}}"
+    scale="{{mapScale}}"
+    markers="{{markers}}"
+    bindmarkertap="onMarkerTap"
+    bindscalechange="onMapScaleChange"
+    show-location
+    enable-3d
+  ></map>
+
+  <!-- Loading overlay -->
+  <view wx:if="{{loading}}" class="loading-overlay">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- Error overlay -->
+  <view wx:if="{{error && !loading}}" class="error-overlay">
+    <text class="error-text">{{error}}</text>
+    <text class="error-hint">下拉刷新重试</text>
+  </view>
+
+  <!-- Category filter chips (D-10: horizontal scrollable) -->
+  <scroll-view class="filter-chips" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="chips-row">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="chip {{item.active ? 'chip--active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onCategoryTap"
+      >
+        <text class="chip-text">{{item.name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Radius preset pills (D-09) -->
+  <view class="radius-presets">
+    <view
+      wx:for="{{radiusOptions}}"
+      wx:key="value"
+      class="pill {{item.selected ? 'pill--active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="onRadiusTap"
+    >
+      <text class="pill-text">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- Bottom sheet overlay (D-06, D-07) -->
+  <cover-view
+    wx:if="{{showBottomSheet}}"
+    class="bottom-sheet {{showBottomSheet ? 'bottom-sheet--open' : ''}}"
+    bindtap="onBottomSheetClose"
+  >
+    <cover-view class="sheet-content" catchtap="noop">
+      <!-- Handle bar -->
+      <cover-view class="handle-bar"></cover-view>
+
+      <!-- Site name (heading, 18px semibold) -->
+      <cover-view class="site-name">{{selectedSite.name}}</cover-view>
+
+      <!-- Category tag pill (vermilion background) -->
+      <cover-view class="category-tag">
+        <text class="tag-text">{{selectedSite.category}}</text>
+      </cover-view>
+
+      <!-- Hero image (if available, 160px height) -->
+      <cover-view wx:if="{{selectedSite.imageUrl}}" class="hero-image">
+        <cover-image
+          src="{{selectedSite.imageUrl}}"
+          mode="aspectFill"
+          class="hero-img"
+        />
+      </cover-view>
+
+      <!-- Description (body, max 3 lines) -->
+      <cover-view class="description">
+        <text class="description-text">{{selectedSite.description}}</text>
+      </cover-view>
+
+      <!-- Address row -->
+      <cover-view class="address-row">
+        <text class="address-icon">📍</text>
+        <text class="address-text">{{selectedSite.address}}</text>
+      </cover-view>
+
+      <!-- Distance (if available) -->
+      <cover-view wx:if="{{selectedSite.distance}}" class="distance-row">
+        <text class="distance-text">距离 {{selectedSite.distance < 1000 ? selectedSite.distance + 'm' : (selectedSite.distance/1000).toFixed(1) + 'km'}}</text>
+      </cover-view>
+
+      <!-- Navigation CTA button (D-08) -->
+      <cover-view class="nav-btn" bindtap="onNavigate">
+        <text class="nav-btn-text">导航前往</text>
+      </cover-view>
+    </cover-view>
+  </cover-view>
+
+</view>

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "全国非遗地图",
+  "navigationBarBackgroundColor": "#2B2B2B",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
+}
