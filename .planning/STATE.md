@@ -1,37 +1,62 @@
-# State
+# State — 数字传承人 v1.1
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Not started (defining roadmap)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-01 — Milestone v1.1 started
+Status: Defining roadmap
+Last activity: 2026-04-01 — v1.1 roadmap creation started
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-01)
+**Core value:** 让每一位用户都能成为"数字传承人" — 通过 AI 实时指导、知识图谱和创意工具，降低非遗学习门槛，实现中华优秀传统文化的数字化传承
 
-**Core value:** 让每一位用户都能成为"数字传承人"
-**Current focus:** v1.1 移动端非遗体验
+**Current focus:** v1.1 移动端非遗体验 — 微信小程序轻量入口，聚焦知识学习和地理探索
+
+## Milestone Progress
+
+| Milestone | Phase | Status | Completion |
+|-----------|-------|--------|------------|
+| v1.0 UI Enhancement | Phase 1 | Complete | 100% |
+| v1.1 移动端非遗体验 | Phase 2, 3, 4 | Not started | 0% |
+
+## v1.1 Phase Status
+
+| Phase | Name | Status | Progress |
+|-------|------|--------|----------|
+| Phase 2 | 小程序基础架构 | Not started | 0% |
+| Phase 3 | 全国非遗地图 + LBS | Not started | 0% |
+| Phase 4 | 微创作 + 分享 | Not started | 0% |
 
 ## Accumulated Context
 
-<!-- Carried from previous milestones -->
+### v1.0 Completed
+- React 19 + TypeScript + Vite + Tailwind CSS frontend
+-东方美学设计系统 (colors, spacing, shadows, animations)
+- Component library (Button, Card, Modal, Tooltip, Accordion, Form inputs, Navbar, etc.)
+- Page transitions and loading skeletons
+- MediaPipe hand tracking UI (VisionMentor page)
+- Knowledge curator and creative artisan UI frameworks
 
-### 已验证能力
-- 前端 UI 框架完整（React + Tailwind + 东方美学）
-- 页面路由结构完成（Home, VisionMentor, KnowledgeCurator, MasterWorkshop, CraftLibrary, MyPractice）
-- Neo4j 知识图谱服务已连接
-- shadow_puppet_* 数据已准备好（RAG 问答知识库）
+### v1.1 New (Mobile)
 
-### 待完成（从 PRD）
-- Vision Mentor Agent 后端（姿态比对 + 反馈）
-- Knowledge Curator Agent（RAG + LLM 集成）
-- Creative Artisan Agent（SDXL + ControlNet）
-- 主协调器 MCP 协议
+#### Technical Decisions
+| Decision | Rationale |
+|----------|-----------|
+| Taro 4.x 跨平台框架 | 复用 React 19 代码库，编译到 WXML/WXSS |
+| AI 功能留在 FastAPI 后端 | 小程序包体积限制 20MB，轻量前端 |
+| GCJ-02 坐标系 | 微信地图标准，必须使用 wx.getLocation({type: 'gcj02'}) |
+| Phase 顺序: Foundation -> Map -> Creation | 研究推荐：先验证后端连接，再开发地图，最后创作 |
 
-### v1.1 新增
-- 微信小程序基础架构
-- 每日知识推送 + 打卡系统
-- 全国非遗地图
-- AR 滤镜、LBS 地图、微创作等扩展功能
+#### Research Flags (需在规划阶段验证)
+- Phase 3 (AR 滤镜): AR 实现方案需原型验证（服务端帧处理 vs 客户端），中低端设备性能未验证
+- Phase 4 (社区): 微信 UGC 内容政策合规性需法务审查
+
+### Technical Constraints
+- **包体积**: 主包 <15MB，分包加载 AI/ML 模型
+- **坐标系**: 仅 GCJ-02，存储和显示必须一致
+- **分享限制**: 微信内分享使用小程序码/海报，非直接链接
+
+## Next Action
+
+Ready for planning: `/gsd:plan-phase 2`
