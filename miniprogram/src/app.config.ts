@@ -7,5 +7,5 @@ export default defineAppConfig({
     navigationBarTextStyle: 'white',
   },
   style: 'v2',
-  componentFramework: 'glass-eager',
+  componentFramework: 'glass-easel',
 })
