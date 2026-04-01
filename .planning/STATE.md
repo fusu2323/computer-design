@@ -39,7 +39,7 @@ Last activity: 2026-04-01
 | Phase | Name | Status | Progress |
 |-------|------|--------|----------|
 | Phase 2 | 小程序基础架构 | Complete | 100% |
-| Phase 3 | 全国非遗地图 + LBS | Context gathered | 0% |
+| Phase 3 | 全国非遗地图 + LBS | Complete | 100% |
 | Phase 4 | 微创作 + 分享 | Not started | 0% |
 
 ## Accumulated Context
@@ -79,4 +79,14 @@ Last activity: 2026-04-01
 
 ## Next Action
 
-Ready for Phase 3 planning: `/gsd:plan-phase 3`
+Ready for Phase 4 planning: `/gsd:plan-phase 4`
+
+## Decisions
+
+| Phase | Decision | Rationale |
+|-------|----------|-----------|
+| 03-lbs | WeChat native map component | Full integration with wx.getLocation, wx.openLocation APIs |
+| 03-lbs | Grid-based clustering (zoom < 8) | Custom JS clustering, no external dependency |
+| 03-lbs | cover-view bottom sheet overlay | Required for rendering above map component |
+| 03-lbs | Haversine radius filtering (1/5/10/20km) | User-configurable LBS distance filtering |
+| 03-lbs | Category filter chips (刺绣/陶瓷/剪纸/编织) | Horizontal scrollable ICH category selection |
