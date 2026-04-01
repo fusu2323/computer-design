@@ -1,0 +1,81 @@
+<!-- pages/home/index.wxml -->
+<view class="home-page">
+  <!-- 顶部标题 -->
+  <view class="app-header">
+    <text class="app-title">数字传承人</text>
+    <text class="app-subtitle">每日非遗知识</text>
+  </view>
+
+  <!-- 登录后显示知识卡片 -->
+  <view wx:if="{{isLoggedIn}}">
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="knowledge-card skeleton-card card-enter">
+      <view class="card-image-placeholder skeleton"></view>
+      <view class="card-content">
+        <view class="skeleton" style="height:36rpx;width:70%;margin-bottom:16rpx;"></view>
+        <view class="skeleton" style="height:24rpx;width:40%;margin-bottom:20rpx;"></view>
+        <view class="skeleton" style="height:80rpx;width:100%;"></view>
+      </view>
+    </view>
+
+    <!-- 错误状态 -->
+    <view wx:elif="{{error}}" class="knowledge-card error-card card-enter">
+      <view class="card-content error-content">
+        <text class="error-title">{{error}}</text>
+        <text class="error-body">登录后即可每日获取非遗知识</text>
+      </view>
+    </view>
+
+    <!-- 加载完成 - 有数据 -->
+    <view wx:elif="{{dailyFact}}" class="knowledge-card card-enter">
+      <image
+        wx:if="{{dailyFact.imageUrl}}"
+        class="card-image"
+        src="{{dailyFact.imageUrl}}"
+        mode="aspectFill"
+        lazy-load
+      />
+      <view wx:else class="card-image-placeholder empty-image">
+        <text class="placeholder-text">非遗</text>
+      </view>
+      <view class="card-content">
+        <text class="card-title">{{dailyFact.title}}</text>
+        <view class="card-tag">
+          <text class="tag-text">{{dailyFact.category}}</text>
+        </view>
+        <text class="card-fact">{{dailyFact.fact}}</text>
+      </view>
+    </view>
+
+    <!-- 无数据 -->
+    <view wx:else class="knowledge-card error-card card-enter">
+      <view class="card-content error-content">
+        <text class="error-title">今日知识待解锁</text>
+        <text class="error-body">登录后即可每日获取非遗知识</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未登录 -->
+  <view wx:else class="login-prompt">
+    <text class="prompt-text">登录后查看今日非遗知识</text>
+  </view>
+
+  <!-- 登录按钮 -->
+  <button
+    class="login-btn {{isLoggedIn ? 'login-btn--disabled' : ''}} {{loading ? 'login-btn--loading' : ''}}"
+    bindtap="handleLogin"
+    disabled="{{isLoggedIn || loading}}"
+  >
+    <view wx:if="{{loading}}" class="btn-loading">
+      <view class="spinner"></view>
+      <text class="btn-text">登录中...</text>
+    </view>
+    <text wx:else class="btn-text">微信登录</text>
+  </button>
+
+  <!-- 底部装饰 -->
+  <view class="home-footer">
+    <view class="footer-divider"></view>
+  </view>
+</view>

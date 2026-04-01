@@ -7,7 +7,6 @@
     "es6": true,
     "enhance": true,
     "postcss": true,
-    "preloadBackgroundData": false,
     "minified": true,
     "newFeature": true,
     "coverView": true,
