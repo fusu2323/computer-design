@@ -7,7 +7,7 @@
 ## Phases
 
 - [x] **Phase 2: 小程序基础架构** — Taro 项目脚手架、微信登录、每日知识卡片 (completed 2026-04-01)
-- [ ] **Phase 3: 全国非遗地图 + LBS** — 地图探索、附近发现、导航跳转
+- [x] **Phase 3: 全国非遗地图 + LBS** — 地图探索、附近发现、导航跳转 (completed 2026-04-01)
 - [ ] **Phase 4: 微创作 + 分享** — 纹样填色、创作保存、微信分享
 
 ---
@@ -54,10 +54,10 @@
 4. User can tap "导航" button to open WeChat map with navigation to selected site
 5. Map uses GCJ-02 coordinate system (verified via wx.getLocation({type: 'gcj02'}))
 
-**Plans:** 2/2 plans ready
+**Plans:** 2/2 plans complete
 **Plan list:**
-- [ ] 03-01-PLAN.md — Backend API (map endpoints + coordinate seeding)
-- [ ] 03-02-PLAN.md — Frontend Map Page (map UI + utilities + bottom sheet)
+- [x] 03-01-PLAN.md — Backend API (map endpoints + coordinate seeding)
+- [x] 03-02-PLAN.md — Frontend Map Page (map UI + utilities + bottom sheet)
 
 **UI hint:** yes
 
@@ -89,7 +89,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 2. 小程序基础架构 | 3/3 | Complete   | 2026-04-01 |
-| 3. 全国非遗地图 + LBS | 0/2 | Planning complete | - |
+| 3. 全国非遗地图 + LBS | 2/2 | Complete   | 2026-04-01 |
 | 4. 微创作 + 分享 | 0/1 | Not started | - |
 
 ---

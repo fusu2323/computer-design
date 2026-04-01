@@ -15,10 +15,10 @@ Requirements for v1.1 mobile (WeChat Mini-Program). Each maps to roadmap phases.
 
 ### Map & Discovery
 
-- [ ] **MAP-01**: User can view national ICH map with geographic markers
-- [ ] **MAP-02**: User can tap map marker to see ICH culture introduction card
-- [ ] **MAP-03**: User can discover nearby heritage sites/artisans within configurable radius
-- [ ] **MAP-04**: User can navigate to a heritage site via WeChat map integration
+- [x] **MAP-01**: User can view national ICH map with geographic markers
+- [x] **MAP-02**: User can tap map marker to see ICH culture introduction card
+- [x] **MAP-03**: User can discover nearby heritage sites/artisans within configurable radius
+- [x] **MAP-04**: User can navigate to a heritage site via WeChat map integration
 
 ### Creation & Sharing
 
@@ -63,10 +63,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | KNOW-01 | Phase 2 | Complete |
 | KNOW-02 | Phase 2 | Complete |
-| MAP-01 | Phase 3 | Pending |
-| MAP-02 | Phase 3 | Pending |
-| MAP-03 | Phase 3 | Pending |
-| MAP-04 | Phase 3 | Pending |
+| MAP-01 | Phase 3 | Complete |
+| MAP-02 | Phase 3 | Complete |
+| MAP-03 | Phase 3 | Complete |
+| MAP-04 | Phase 3 | Complete |
 | CREATE-01 | Phase 4 | Pending |
 | CREATE-02 | Phase 4 | Pending |
 | CREATE-03 | Phase 4 | Pending |
