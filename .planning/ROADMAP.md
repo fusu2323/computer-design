@@ -6,7 +6,7 @@
 
 ## Phases
 
-- [ ] **Phase 2: 小程序基础架构** — Taro 项目脚手架、微信登录、每日知识卡片
+- [x] **Phase 2: 小程序基础架构** — Taro 项目脚手架、微信登录、每日知识卡片 (completed 2026-04-01)
 - [ ] **Phase 3: 全国非遗地图 + LBS** — 地图探索、附近发现、导航跳转
 - [ ] **Phase 4: 微创作 + 分享** — 纹样填色、创作保存、微信分享
 
@@ -29,11 +29,11 @@
 4. Daily knowledge card displays one ICH fact with a category tag and an image
 5. App package size stays under 20MB (main package under 15MB with lazy loading)
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 **Plan list:**
 - [x] 02-01-PLAN.md — Backend /knowledge/daily endpoint
 - [x] 02-02-PLAN.md — Taro 4.x project scaffold + utilities + components
-- [ ] 02-03-PLAN.md — Home page with login + daily card integration
+- [x] 02-03-PLAN.md — Home page with login + daily card integration
 
 **UI hint:** yes
 
@@ -85,7 +85,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 2. 小程序基础架构 | 2/3 | In Progress|  |
+| 2. 小程序基础架构 | 3/3 | Complete   | 2026-04-01 |
 | 3. 全国非遗地图 + LBS | 0/1 | Not started | - |
 | 4. 微创作 + 分享 | 0/1 | Not started | - |
 
