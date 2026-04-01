@@ -1,0 +1,64 @@
+/* 数字传承人 - 全局样式 */
+/* 设计令牌 - 东方美学配色 */
+page {
+  /* 六色配色 */
+  --color-ink-black: #2B2B2B;
+  --color-rice-paper: #F7F5F0;
+  --color-vermilion: #C04851;
+  --color-cyan-glaze: #5796B3;
+  --color-cyan-glaze-light: rgba(87, 150, 179, 0.12);
+  --color-tea-green: #CCD4BF;
+  --color-charcoal: #4A4A4A;
+  --color-white: #FFFFFF;
+
+  /* 间距 - 8pt网格 */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+  --space-2xl: 64rpx;
+
+  /* 字体 */
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* 关键帧动画 */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(24rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes buttonPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 工具类 */
+.card-enter {
+  animation: cardEnter 0.4s ease-out forwards;
+}
+
+page {
+  background-color: var(--color-rice-paper);
+  color: var(--color-ink-black);
+  font-size: 28rpx;
+  line-height: 1.6;
+}

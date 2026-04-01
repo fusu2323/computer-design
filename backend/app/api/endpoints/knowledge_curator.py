@@ -5,12 +5,43 @@ from typing import List, Optional
 import uuid
 from datetime import datetime
 import json
+from pathlib import Path
 
 from app.services.rag_service import rag_service
 from app.db.mysql_db import get_db, Conversation, FollowUpQuestion
 from sqlalchemy.orm import Session
 
 router = APIRouter()
+
+
+def load_ich_facts():
+    """Load ICH facts from the simplified JSON data file."""
+    json_path = Path(__file__).parent.parent.parent.parent.parent / "shadow_puppet_simplified.json"
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    # Extract facts from the data structure
+    facts = []
+    # Main craft fact
+    main_fact = data.get("主要流派", [{}])[0].get("特点", "") if data.get("主要流派") else ""
+    facts.append({
+        "id": 1,
+        "title": data.get("基本信息", {}).get("名称", ""),
+        "category": data.get("基本信息", {}).get("类别", ""),
+        "imageUrl": "",  # No image URL in source data — use empty string
+        "fact": f"{data.get('基本信息', {}).get('名称', '')}是{data.get('基本信息', {}).get('非遗级别', '')}，{main_fact}"
+    })
+    return facts
+
+
+@router.get("/daily")
+async def get_daily_knowledge():
+    """
+    获取每日非遗知识 (GET /api/v1/knowledge/daily)
+    Returns a list of ICH facts for the daily knowledge card.
+    Client-side selects one fact deterministically using date + userId hash.
+    """
+    facts = load_ich_facts()
+    return {"facts": facts}
 
 
 class QueryRequest(BaseModel):

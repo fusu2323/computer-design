@@ -1,95 +1,115 @@
-# ROADMAP.md — 数字传承人
+# ROADMAP.md — 数字传承人 v1.1
+
+## Milestone: v1.1 移动端非遗体验
+
+**Goal:** 在微信小程序上打造移动端非遗体验，聚焦知识学习和地理探索两大场景
 
 ## Phases
 
-| Phase | Name | Status | Description |
-|-------|------|--------|-------------|
-| 0 | 体验完整性优化 | ✓ | Toast、API 层、ErrorBoundary、导航统一 |
-| 1 | UI 增强与优化 | ✓ | 东方美学、动画、性能、组件结构 |
-| 2 | 功能增强 | ◆ | 新交互、新功能、Agent 能力增强 |
-| 3 | 集成与测试 | ○ | 系统集成、UAT |
+- [x] **Phase 2: 小程序基础架构** — Taro 项目脚手架、微信登录、每日知识卡片 (completed 2026-04-01)
+- [ ] **Phase 3: 全国非遗地图 + LBS** — 地图探索、附近发现、导航跳转
+- [ ] **Phase 4: 微创作 + 分享** — 纹样填色、创作保存、微信分享
 
 ---
 
-## Phase 1: UI 增强与优化
+## Phase Details
 
-### Goals
-- 增强东方美学风格
-- 添加炫酷动画/过渡效果
-- 性能优化（加载速度、渲染）
-- 提升可维护性和可扩展性
+### Phase 2: 小程序基础架构
 
-### Deliverables
-- [x] UI-SPEC.md (Design Contract)
-- [x] PLAN.md (Implementation Plan)
-- [x] 01-SUMMARY.md (Wave 1 complete)
+**Goal:** 用户可以打开小程序、登录微信账号、在应用内查看每日非遗知识
 
-### Wave Status
+**Depends on:** None (first phase of v1.1)
 
-| Wave | Status | Tasks |
-|------|--------|-------|
-| Wave 1: Foundation | ✓ Complete | 01-01, 01-02, 01-03, 01-04, 01-05, 01-06 |
-| Wave 2: Component Inventory | ✓ Complete | 01-07, 01-08, 01-09, 01-10, 01-11, 01-12, 01-13, 01-14 |
+**Requirements:** KNOW-01, KNOW-02
 
-### Wave 1 Commits
-- `127ca6b` — Animation Infrastructure (variants.js + springs.js)
-- `38b006b` — Design Tokens (colors, spacing, shadows)
-- `c62096d` — Button Enhancement (framer-motion, sizes, loading, icons)
-- `509de73` — Route-Based Code Splitting (React.lazy + Suspense)
-- `7dadc1a` — PageTransition Wrapper (AnimatePresence)
-- `c120d1e` — LoadingSkeleton Component (page/card/text/avatar + shimmer)
+**Success Criteria** (what must be TRUE):
+1. User can open the mini-program and see the home page without errors
+2. User can log in via WeChat auth (wechat login button triggers auth flow)
+3. User sees a daily ICH knowledge card on the home page each time they open the app
+4. Daily knowledge card displays one ICH fact with a category tag and an image
+5. App package size stays under 20MB (main package under 15MB with lazy loading)
 
-### Wave 2 Commits
-- `54136b0` — AnimatedCard (hover lift, shadow expansion, agent glow)
-- `3c1a159` — Modal (portal, escape key, scale animations)
-- `f1b8d02` — Tooltip (4 positions, fade animation, accessibility)
-- `3cb09fc` — Accordion (expand/collapse, chevron, single/multi-open)
-- `034a68d` — Form inputs (Input, Textarea, Select with focus/error states)
-- `b0a5a0e` — StaggerContainer (viewport-triggered stagger animations)
-- `fde4640` — ChatBubble (user/assistant bubbles, typing indicator)
-- `c3107ec` — Navbar enhancement (scroll blur, mobile menu, active indicator)
+**Plans:** 3/3 plans complete
+**Plan list:**
+- [x] 02-01-PLAN.md — Backend /knowledge/daily endpoint
+- [x] 02-02-PLAN.md — Taro 4.x project scaffold + utilities + components
+- [x] 02-03-PLAN.md — Home page with login + daily card integration
+
+**UI hint:** yes
 
 ---
 
-## Phase 2: 功能增强
+### Phase 3: 全国非遗地图 + LBS
 
-### Goals
-- Vision Mentor: Focus ONLY on shadow puppet (皮影戏), angle-based evaluation, localStorage history
-- Master Orchestrator: Transform MasterWorkshop.jsx to chat UI with orchestrator backend
-- My Practice: Replace mock data with real localStorage-driven data
+**Goal:** 用户可以在地图上探索全国非遗点位，发现附近的传承人和博物馆，并导航前往
 
-### Requirements Addressed
-- **D-01:** Remove embroidery/clay scenarios — focus only on shadow puppet
-- **D-02:** Optimize shadow puppet evaluation with angle-based detection
-- **D-03:** Practice session history via localStorage
-- **D-04:** Transform MasterWorkshop.jsx to orchestrator chat UI
-- **D-05:** Natural language input routed via orchestrator backend
-- **D-06:** Dedicated chat interface (not floating button)
-- **D-07:** Anonymous sessions via localStorage
-- **D-08:** Replace mock data with real localStorage data
+**Depends on:** Phase 2
 
-### Plans
-- [x] 02-01-PLAN.md — Vision Mentor: Shadow focus + angle-based algorithm + localStorage history
-- [x] 02-02-PLAN.md — Master Workshop: Orchestrator chat UI
-- [x] 02-03-PLAN.md — My Practice: localStorage-driven data
+**Requirements:** MAP-01, MAP-02, MAP-03, MAP-04
 
-### Wave Status
+**Success Criteria** (what must be TRUE):
+1. User can view a national map with ICH heritage site markers displayed
+2. User can tap a map marker and see an ICH culture introduction card overlay
+3. User can see nearby heritage sites/artisans within a configurable radius from current location
+4. User can tap "导航" button to open WeChat map with navigation to selected site
+5. Map uses GCJ-02 coordinate system (verified via wx.getLocation({type: 'gcj02'}))
 
-| Wave | Plans | Status |
-|------|-------|--------|
-| Wave 1: Vision + Orchestrator + Profile | 02-01, 02-02, 02-03 | ◆ Ready to execute |
+**Plans:** 2/2 plans ready
+**Plan list:**
+- [ ] 03-01-PLAN.md — Backend API (map endpoints + coordinate seeding)
+- [ ] 03-02-PLAN.md — Frontend Map Page (map UI + utilities + bottom sheet)
+
+**UI hint:** yes
 
 ---
 
-## Phase 3: 集成与测试
+### Phase 4: 微创作 + 分享
 
-### Goals
-- System integration and end-to-end testing
-- User acceptance testing (UAT)
+**Goal:** 用户可以使用预设纹样线稿进行填色创作，保存到相册，并通过微信分享
 
-### Status
-- Not yet planned
+**Depends on:** Phase 2
+
+**Requirements:** CREATE-01, CREATE-02, CREATE-03
+
+**Success Criteria** (what must be TRUE):
+1. User can select a pre-defined ICH pattern line art template
+2. User can apply colors from a preset palette to fill areas of the line art
+3. User can save their finished creation to the phone album
+4. User can share their creation to WeChat moments or send to a WeChat contact
+5. User can view their own creation history in the app
+
+**Plans:** TBD
+
+**UI hint:** yes
 
 ---
 
-*Generated by GSD workflow*
+## Progress Table
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 2. 小程序基础架构 | 3/3 | Complete   | 2026-04-01 |
+| 3. 全国非遗地图 + LBS | 0/2 | Planning complete | - |
+| 4. 微创作 + 分享 | 0/1 | Not started | - |
+
+---
+
+## Coverage
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| KNOW-01 | Phase 2 | Pending |
+| KNOW-02 | Phase 2 | Pending |
+| MAP-01 | Phase 3 | Pending |
+| MAP-02 | Phase 3 | Pending |
+| MAP-03 | Phase 3 | Pending |
+| MAP-04 | Phase 3 | Pending |
+| CREATE-01 | Phase 4 | Pending |
+| CREATE-02 | Phase 4 | Pending |
+| CREATE-03 | Phase 4 | Pending |
+
+**Coverage:** 9/9 requirements mapped
+
+---
+
+*Generated by GSD workflow — v1.1 roadmap*
