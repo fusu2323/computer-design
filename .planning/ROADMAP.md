@@ -29,9 +29,9 @@
 4. Daily knowledge card displays one ICH fact with a category tag and an image
 5. App package size stays under 20MB (main package under 15MB with lazy loading)
 
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 **Plan list:**
-- [ ] 02-01-PLAN.md — Backend /knowledge/daily endpoint
+- [x] 02-01-PLAN.md — Backend /knowledge/daily endpoint
 - [x] 02-02-PLAN.md — Taro 4.x project scaffold + utilities + components
 - [ ] 02-03-PLAN.md — Home page with login + daily card integration
 
@@ -85,7 +85,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 2. 小程序基础架构 | 1/3 | In Progress|  |
+| 2. 小程序基础架构 | 2/3 | In Progress|  |
 | 3. 全国非遗地图 + LBS | 0/1 | Not started | - |
 | 4. 微创作 + 分享 | 0/1 | Not started | - |
 
