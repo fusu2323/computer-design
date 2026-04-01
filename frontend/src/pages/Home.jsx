@@ -1,73 +1,63 @@
-import React from 'react';
+/**
+ * Home.jsx — TEMPORARY DUAL DESIGN TOGGLE FOR ORCHESTRATOR COMPARISON
+ *
+ * HOW TO USE:
+ * - Toggle between Design A (太极螺旋) and Design C (画卷展开) using the DevOverlay below
+ * - After choosing, REPLACE the chosen design into the Hero section and remove the toggle
+ *
+ * TO CHOOSE A DESIGN:
+ * 1. Design A: import OrchestratorHeroA — dark theme, Taiji spiral, scroll unfurl result
+ * 2. Design C: import OrchestratorHeroC — light theme, scroll unfurl on load, museum card result
+ */
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import HomeImage from '../assets/Home.png';
+import OrchestratorHeroA from '../components/OrchestratorHeroA';
+import OrchestratorHeroC from '../components/OrchestratorHeroC';
+
+// ===== TEMPORARY DEV TOGGLE — REMOVE AFTER CHOOSING =====
+const DevOverlay = ({ active, onToggle }) => (
+  <div className="fixed bottom-4 left-4 z-[100] flex items-center gap-3 bg-ink-black/90 backdrop-blur px-4 py-3 rounded-xl border border-white/10 shadow-2xl">
+    <span className="text-rice-paper/60 text-xs font-serif">设计对比</span>
+    <div className="flex gap-1">
+      {['A', 'C'].map(d => (
+        <button
+          key={d}
+          onClick={() => onToggle(d)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            active === d
+              ? 'bg-vermilion text-white'
+              : 'bg-white/10 text-rice-paper/60 hover:bg-white/20'
+          }`}
+        >
+          设计{d}
+        </button>
+      ))}
+    </div>
+    <span className="text-rice-paper/30 text-xs">太极螺旋 vs 画卷展开</span>
+  </div>
+);
+// ===== END TEMPORARY TOGGLE =====
 
 const Home = () => {
   const navigate = useNavigate();
+  const [orchestratorDesign, setOrchestratorDesign] = useState('A');
+
   return (
     <div className="min-h-screen bg-rice-paper">
       <Navbar />
-      
-      {/* Hero Section */}
-      <main className="pt-32 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-24">
-          {/* Left: Text */}
-          <div className="lg:col-span-5 flex flex-col justify-center relative">
-            {/* Decorative vertical line */}
-            <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-vermilion to-transparent opacity-30"></div>
 
-            <div className="inline-block mb-6">
-              <span className="seal-border text-vermilion font-calligraphy text-lg">非遗新造</span>
-            </div>
-            <h1 className="font-calligraphy text-6xl md:text-7xl lg:text-8xl mb-6 leading-tight text-ink-black">
-              指尖<br />
-              <span className="text-vermilion">乾坤</span>
-            </h1>
-            <p className="font-serif text-lg md:text-xl text-charcoal leading-loose mb-10 max-w-md">
-              以数字之眼，观非遗之美。<br />
-              通过 AI 视觉纠偏、知识图谱与风格复原，<br />
-              让千年技艺触手可及。
-            </p>
+      {/* ===== ORCHESTRATOR HERO — REPLACE THIS SECTION WITH CHOSEN DESIGN ===== */}
+      {orchestratorDesign === 'A' ? <OrchestratorHeroA /> : <OrchestratorHeroC />}
+      {/* ===== END ORCHESTRATOR HERO ===== */}
 
-            <div className="flex gap-6">
-              <Button onClick={() => navigate('/craft-library')}>开始修习</Button>
-              <Button variant="outline" onClick={() => navigate('/shadow-puppet')}>皮影戏</Button>
-            </div>
-          </div>
+      {/* Temp toggle - REMOVE AFTER CHOOSING */}
+      <DevOverlay active={orchestratorDesign} onToggle={setOrchestratorDesign} />
 
-          {/* Right: Visual */}
-          <div className="lg:col-span-7 relative h-[600px] flex items-center justify-center">
-            {/* Abstract Circle Background */}
-            <div className="absolute w-[500px] h-[500px] rounded-full border border-ink-black/5 animate-spin-slow"></div>
-            <div className="absolute w-[400px] h-[400px] rounded-full border border-ink-black/10"></div>
-
-            {/* Main Visual Image */}
-            <div className="relative z-10 w-full h-full rounded-lg overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-700">
-              <img src={HomeImage} alt="Ink Wash Landscape" className="w-full h-full object-cover filter contrast-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink-black/60 to-transparent flex items-end p-8">
-                <div className="text-rice-paper">
-                  <h3 className="font-calligraphy text-3xl mb-2">皮影戏 · 光影艺术</h3>
-                  <p className="font-sans text-sm opacity-80">新增热门修习项目</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Badge */}
-            <div className="absolute -right-4 top-20 bg-rice-paper p-4 shadow-xl border-l-4 border-vermilion animate-float z-20 max-w-xs">
-              <div className="flex items-start gap-3">
-                <div className="text-vermilion text-2xl">❝</div>
-                <div>
-                  <p className="text-sm font-serif italic text-charcoal">
-                    "一口叙说千古事，双手对舞百万兵。皮影戏真的太有魅力了！"
-                  </p>
-                  <p className="text-xs text-right mt-2 text-charcoal/60">— 学员评价</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <main className="pt-8 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
 
         {/* Agents Section */}
         <div className="mb-20">
@@ -150,7 +140,6 @@ const Home = () => {
         {/* Shadow Puppet Feature Section */}
         <div className="mb-20">
           <div className="bg-gradient-to-r from-ink-black/90 to-ink-black/70 rounded-sm p-8 md:p-12 relative overflow-hidden text-rice-paper">
-            {/* Decorative Background */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute right-0 top-0 w-64 h-64 border border-rice-paper/20 rounded-full"></div>
               <div className="absolute right-32 top-32 w-48 h-48 border border-rice-paper/20 rounded-full"></div>
@@ -185,26 +174,18 @@ const Home = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-sm">
-                  <div className="text-vermilion text-3xl mb-2">影</div>
-                  <h3 className="font-xiaowei text-lg mb-2">光影艺术</h3>
-                  <p className="text-sm text-rice-paper/70">灯光照射下，影人投影于幕布，展现千古故事</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-sm">
-                  <div className="text-cyan-glaze text-3xl mb-2">雕</div>
-                  <h3 className="font-xiaowei text-lg mb-2">雕刻工艺</h3>
-                  <p className="text-sm text-rice-paper/70">阳刻阴刻结合，镂空技法，精美绝伦</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-sm">
-                  <div className="text-tea-green text-3xl mb-2">唱</div>
-                  <h3 className="font-xiaowei text-lg mb-2">唱腔音乐</h3>
-                  <p className="text-sm text-rice-paper/70">各地流派唱腔独特，乐器伴奏丰富</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-sm">
-                  <div className="text-amber-500 text-3xl mb-2">演</div>
-                  <h3 className="font-xiaowei text-lg mb-2">操纵技法</h3>
-                  <p className="text-sm text-rice-paper/70">三根竹签操纵影人，手势动作精妙</p>
-                </div>
+                {[
+                  { char: '影', title: '光影艺术', desc: '灯光照射下，影人投影于幕布' },
+                  { char: '雕', title: '雕刻工艺', desc: '阳刻阴刻结合，镂空技法' },
+                  { char: '唱', title: '唱腔音乐', desc: '各地流派唱腔独特' },
+                  { char: '演', title: '操纵技法', desc: '三根竹签操纵影人' },
+                ].map(item => (
+                  <div key={item.char} className="bg-white/10 backdrop-blur-sm p-4 rounded-sm">
+                    <div className="text-vermilion text-3xl mb-2">{item.char}</div>
+                    <h3 className="font-xiaowei text-lg mb-2">{item.title}</h3>
+                    <p className="text-sm text-rice-paper/70">{item.desc}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -216,24 +197,19 @@ const Home = () => {
             <h2 className="font-xiaowei text-2xl">修习档案</h2>
             <span className="text-sm text-gray-400 font-sans">上次更新: 今日 14:30</span>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center p-4 border-r border-gray-100 last:border-0">
-              <div className="text-4xl font-serif text-ink-black mb-2">12.5</div>
-              <div className="text-xs text-charcoal/60 tracking-wider">修习小时</div>
-            </div>
-            <div className="text-center p-4 border-r border-gray-100 last:border-0">
-              <div className="text-4xl font-serif text-vermilion mb-2">85%</div>
-              <div className="text-xs text-charcoal/60 tracking-wider">动作准确率</div>
-            </div>
-            <div className="text-center p-4 border-r border-gray-100 last:border-0">
-              <div className="text-4xl font-serif text-cyan-glaze mb-2">3</div>
-              <div className="text-xs text-charcoal/60 tracking-wider">掌握技法</div>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-4xl font-serif text-ink-black mb-2">Lv.2</div>
-              <div className="text-xs text-charcoal/60 tracking-wider">传承等级</div>
-            </div>
+            {[
+              { value: '12.5', label: '修习小时', color: 'text-ink-black' },
+              { value: '85%', label: '动作准确率', color: 'text-vermilion' },
+              { value: '3', label: '掌握技法', color: 'text-cyan-glaze' },
+              { value: 'Lv.2', label: '传承等级', color: 'text-ink-black' },
+            ].map(item => (
+              <div key={item.label} className="text-center p-4 border-r border-gray-100 last:border-0">
+                <div className={`text-4xl font-serif ${item.color} mb-2`}>{item.value}</div>
+                <div className="text-xs text-charcoal/60 tracking-wider">{item.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </main>

@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-last_updated: "2026-03-31T03:30:00.000Z"
+status: unknown
+last_updated: "2026-03-31T16:36:38.327Z"
 progress:
-  total_phases: 4
-  completed_phases: 1
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 3
+  completed_phases: 2
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # STATE.md — Project State
@@ -25,7 +25,7 @@ progress:
 |-------|------|--------|-------|----------|
 | 0 | 体验完整性优化 | ✓ | 6/6 | 100% |
 | 1 | UI 增强与优化 | ✓ | 14/14 | 100% |
-| 2 | 功能增强 | ◆ | 0 | Context gathered |
+| 2 | 功能增强 | ✓ | 3/3 | 100% |
 | 3 | 集成与测试 | ○ | - | - |
 
 ## Current Session
@@ -40,6 +40,7 @@ progress:
 - Discussion Log: `.planning/phases/02-feature-enhancement/02-DISCUSSION-LOG.md` ✓
 
 ### Phase 2 Key Decisions
+
 - Vision Mentor: Focus ONLY on shadow puppet (皮影戏) — remove embroidery + clay
 - Vision Mentor: Optimize shadow puppet evaluation algorithm (angle-based detection)
 - Vision Mentor: Practice history via localStorage anonymous sessions
@@ -47,6 +48,14 @@ progress:
 - User Profile: Anonymous localStorage sessions (no full auth)
 - Knowledge Curator: Deferred — RAG pipeline exists but data seeding out of scope
 - Creative Artisan: Keep as-is
+
+## Phase 2 Wave 1 Commits
+
+| Commit | Task | Description |
+|--------|------|-------------|
+| `7ecf3fd` | 02-01 | Vision Mentor shadow-only + angle-based detection + localStorage |
+| `211f171` | 02-02 | MasterWorkshop → orchestrator chat UI |
+| `df90974` | 02-03 | MyPractice localStorage-driven + useLocalStorage hook |
 
 ---
 
