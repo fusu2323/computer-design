@@ -19,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@tarojs/cli": "4.1.11",
+    "@tarojs/plugin-platform-weapp": "^4.1.11",
     "@types/react": "^18.2.0",
     "typescript": "^5.0.0"
   }

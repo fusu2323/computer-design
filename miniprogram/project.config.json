@@ -1,7 +1,6 @@
 {
-  "miniprogramRoot": "./src/",
   "projectname": "digital-inheritor",
-  "appid": "touristappid",
+  "appid": "wx6a90fe66c9d838f4",
   "compileType": "miniprogram",
   "setting": {
     "urlCheck": false,
@@ -31,9 +30,23 @@
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true
+    "minifyWXSS": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "libVersion": "3.3.0",
-  "srcMiniprogramRoot": "src/",
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }
