@@ -10,8 +10,8 @@ Requirements for v1.1 mobile (WeChat Mini-Program). Each maps to roadmap phases.
 
 ### Knowledge & Engagement
 
-- [ ] **KNOW-01**: User can view daily ICH knowledge card when opening the app
-- [ ] **KNOW-02**: Daily knowledge card shows one ICH fact with category tag and image
+- [x] **KNOW-01**: User can view daily ICH knowledge card when opening the app
+- [x] **KNOW-02**: Daily knowledge card shows one ICH fact with category tag and image
 
 ### Map & Discovery
 
@@ -61,8 +61,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| KNOW-01 | Phase 2 | Pending |
-| KNOW-02 | Phase 2 | Pending |
+| KNOW-01 | Phase 2 | Complete |
+| KNOW-02 | Phase 2 | Complete |
 | MAP-01 | Phase 3 | Pending |
 | MAP-02 | Phase 3 | Pending |
 | MAP-03 | Phase 3 | Pending |
