@@ -1,0 +1,33 @@
+/* Design tokens — Phase 1 Eastern aesthetics adapted for WXSS */
+page {
+  /* Colors — 6-color palette */
+  --color-ink-black: #2B2B2B;
+  --color-rice-paper: #F7F5F0;
+  --color-vermilion: #C04851;
+  --color-cyan-glaze: #5796B3;
+  --color-cyan-glaze-light: rgba(87, 150, 179, 0.12);
+  --color-tea-green: #CCD4BF;
+  --color-charcoal: #4A4A4A;
+  --color-white: #FFFFFF;
+
+  /* Spacing — 8-point grid */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+
+  /* Typography */
+  --font-serif: 'Noto Serif SC', serif;
+  --font-calligraphy: 'Ma Shan Zheng', cursive;
+  --font-xiaowei: 'ZCOOL XiaoWei', serif;
+  --font-size-body: 28rpx;
+  --font-size-label: 24rpx;
+  --font-size-heading: 36rpx;
+  --font-size-display: 48rpx;
+
+  /* Shadows */
+  --card-shadow: 0 4px 20rpx -2px rgba(43, 43, 43, 0.1);
+  --hover-shadow: 0 8px 24rpx -2px rgba(43, 43, 43, 0.15);
+}
