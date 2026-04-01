@@ -1,0 +1,25 @@
+{
+  "name": "digital-inheritor-miniprogram",
+  "version": "1.0.0",
+  "private": true,
+  "description": "数字传承人 - 微信小程序",
+  "scripts": {
+    "dev:weapp": "npm run build:weapp -- --watch",
+    "build:weapp": "taro build --type weapp",
+    "dev": "taro build --type weapp --watch",
+    "build": "taro build --type weapp",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@tarojs/components": "4.1.11",
+    "@tarojs/react": "4.1.11",
+    "@tarojs/taro": "4.1.11",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@tarojs/cli": "4.1.11",
+    "@types/react": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}
