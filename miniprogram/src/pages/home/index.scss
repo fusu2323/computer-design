@@ -4,4 +4,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: var(--space-xl);
+}
+
+.login-prompt {
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+}
+
+.prompt-text {
+  font-family: var(--font-serif);
+  font-size: var(--font-size-body);
+  color: var(--color-charcoal);
+}
+
+.home-footer {
+  width: 100%;
+  padding: var(--space-lg) var(--space-md);
+}
+
+.footer-divider {
+  height: 2rpx;
+  background: var(--color-tea-green);
+  opacity: 0.3;
 }
