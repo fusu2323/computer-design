@@ -10,52 +10,21 @@
  * 2. Design C: import OrchestratorHeroC — light theme, scroll unfurl on load, museum card result
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import HomeImage from '../assets/Home.png';
 import OrchestratorHeroA from '../components/OrchestratorHeroA';
-import OrchestratorHeroC from '../components/OrchestratorHeroC';
-
-// ===== TEMPORARY DEV TOGGLE — REMOVE AFTER CHOOSING =====
-const DevOverlay = ({ active, onToggle }) => (
-  <div className="fixed bottom-4 left-4 z-[100] flex items-center gap-3 bg-ink-black/90 backdrop-blur px-4 py-3 rounded-xl border border-white/10 shadow-2xl">
-    <span className="text-rice-paper/60 text-xs font-serif">设计对比</span>
-    <div className="flex gap-1">
-      {['A', 'C'].map(d => (
-        <button
-          key={d}
-          onClick={() => onToggle(d)}
-          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-            active === d
-              ? 'bg-vermilion text-white'
-              : 'bg-white/10 text-rice-paper/60 hover:bg-white/20'
-          }`}
-        >
-          设计{d}
-        </button>
-      ))}
-    </div>
-    <span className="text-rice-paper/30 text-xs">太极螺旋 vs 画卷展开</span>
-  </div>
-);
-// ===== END TEMPORARY TOGGLE =====
 
 const Home = () => {
   const navigate = useNavigate();
-  const [orchestratorDesign, setOrchestratorDesign] = useState('A');
 
   return (
     <div className="min-h-screen bg-rice-paper">
       <Navbar />
 
-      {/* ===== ORCHESTRATOR HERO — REPLACE THIS SECTION WITH CHOSEN DESIGN ===== */}
-      {orchestratorDesign === 'A' ? <OrchestratorHeroA /> : <OrchestratorHeroC />}
-      {/* ===== END ORCHESTRATOR HERO ===== */}
-
-      {/* Temp toggle - REMOVE AFTER CHOOSING */}
-      <DevOverlay active={orchestratorDesign} onToggle={setOrchestratorDesign} />
+      <OrchestratorHeroA />
 
       <main className="pt-8 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
 

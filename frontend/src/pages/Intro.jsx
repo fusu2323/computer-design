@@ -63,6 +63,8 @@ const Intro = () => {
     
     const option = {
       backgroundColor: 'transparent',
+      animationDurationUpdate: 3000,
+      animationEasingUpdate: 'cubicInOut',
       geo: {
         map: 'china',
         roam: false,
@@ -87,13 +89,23 @@ const Intro = () => {
       },
       series: [
         {
-          type: 'effectScatter',
+          type: 'scatter',
           coordinateSystem: 'geo',
           data: ichLocations.slice(1).map(loc => ({
             name: loc.name,
             value: [...loc.coordinates, 1], // [lng, lat, value]
           })),
-          symbolSize: 12,
+          symbolSize: 6,
+          itemStyle: {
+            color: '#8b7e66', // subtle ink color for inactive dots
+          },
+          zlevel: 0
+        },
+        {
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          data: [], // Starts empty, updated in useEffect
+          symbolSize: 15,
           itemStyle: {
             color: '#c23531', // vermilion red
             shadowBlur: 10,
@@ -101,7 +113,8 @@ const Intro = () => {
           },
           showEffectOn: 'render',
           rippleEffect: {
-            brushType: 'stroke'
+            brushType: 'stroke',
+            scale: 4
           },
           zlevel: 1
         }
@@ -145,13 +158,33 @@ const Intro = () => {
 
     const loc = ichLocations[currentIndex];
     
+    // Generate active data points dynamically
+    // The current location should have the effectScatter (ripple)
+    // and other visited/known locations can be simple scatter points or hidden
+    // We only show the active one to ensure it stays pinned to the geo coordinate
+    const activeData = loc.id === 'start' ? [] : [{
+      name: loc.name,
+      value: [...loc.coordinates, 1],
+    }];
+
     chart.setOption({
       geo: {
         center: loc.coordinates,
         zoom: loc.zoom,
-        animationDurationUpdate: 3000, // Cinematic slow pan
-        animationEasingUpdate: 'cubicInOut'
-      }
+      },
+      series: [
+        {
+          type: 'scatter', // keep the background dots unchanged
+          data: ichLocations.slice(1).map(l => ({
+            name: l.name,
+            value: [...l.coordinates, 1]
+          }))
+        },
+        {
+          type: 'effectScatter',
+          data: activeData
+        }
+      ]
     });
   }, [currentIndex]);
 

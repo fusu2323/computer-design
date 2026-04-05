@@ -7,28 +7,15 @@ Run: python -m app.db.seed_coordinates
 from app.services.neo4j_service import neo4j_service
 
 # Sample ICH sites with GCJ-02 coordinates
-# These are well-known national-level ICH sites across China
+# Names must EXACTLY match Heritage nodes in Neo4j
 HERITAGE_COORDINATES = [
-    # Ceramics (陶瓷) - Jingdezhen, Jiangxi
-    {"name": "景德镇手工制瓷技艺", "category": "陶瓷", "latitude": 29.2685, "longitude": 117.1783, "address": "江西省景德镇市珠山区"},
-    {"name": "龙泉青瓷烧制技艺", "category": "陶瓷", "latitude": 28.0833, "longitude": 119.1333, "address": "浙江省龙泉市"},
-    {"name": "德化瓷烧制技艺", "category": "陶瓷", "latitude": 25.4833, "longitude": 118.4167, "address": "福建省德化县"},
-
-    # Embroidery (刺绣) - Suzhou, Hunan, Guangdong
-    {"name": "苏绣", "category": "刺绣", "latitude": 31.2989, "longitude": 120.5853, "address": "江苏省苏州市"},
-    {"name": "湘绣", "category": "刺绣", "latitude": 28.2282, "longitude": 112.9388, "address": "湖南省长沙市"},
-    {"name": "粤绣", "category": "刺绣", "latitude": 23.1291, "longitude": 113.2644, "address": "广东省广州市"},
-    {"name": "蜀绣", "category": "刺绣", "latitude": 30.6587, "longitude": 104.0657, "address": "四川省成都市"},
-
-    # Paper-cutting (剪纸) - Northern China
-    {"name": "蔚县剪纸", "category": "剪纸", "latitude": 39.8333, "longitude": 114.5667, "address": "河北省蔚县"},
-    {"name": "佛山剪纸", "category": "剪纸", "latitude": 23.0218, "longitude": 113.1219, "address": "广东省佛山市"},
-    {"name": "陕北剪纸", "category": "剪纸", "latitude": 36.5853, "longitude": 109.4896, "address": "陕西省延安市"},
-
-    # Weaving (编织) - Multiple provinces
-    {"name": "蜀锦织造技艺", "category": "编织", "latitude": 30.6587, "longitude": 104.0657, "address": "四川省成都市"},
-    {"name": "南京云锦木机妆花手工织造技艺", "category": "编织", "latitude": 32.0603, "longitude": 118.7969, "address": "江苏省南京市"},
-    {"name": "蜡染技艺", "category": "编织", "latitude": 26.5986, "longitude": 106.7073, "address": "贵州省安顺市"},
+    # Matches actual Neo4j Heritage nodes:
+    {"name": "蜡染", "latitude": 26.5986, "longitude": 106.7073, "address": "贵州省安顺市"},
+    {"name": "剪纸", "latitude": 39.8333, "longitude": 114.5667, "address": "河北省蔚县"},
+    {"name": "苏绣", "latitude": 31.2989, "longitude": 120.5853, "address": "江苏省苏州市"},
+    {"name": "紫砂", "latitude": 31.2989, "longitude": 120.5853, "address": "江苏省宜兴市"},
+    {"name": "皮影戏", "latitude": 34.2667, "longitude": 108.9500, "address": "陕西省西安市"},
+    {"name": "宜兴紫砂陶制作技艺", "latitude": 31.2989, "longitude": 120.5853, "address": "江苏省宜兴市"},
 ]
 
 def seed_coordinates():

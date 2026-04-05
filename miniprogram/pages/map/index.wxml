@@ -1,7 +1,7 @@
 <!-- pages/map/index.wxml - National ICH Map Page -->
 <view class="map-page">
 
-  <!-- Full-screen map (D-01: WeChat native map component) -->
+  <!-- Full-screen map -->
   <map
     id="mainMap"
     class="map-container"
@@ -27,7 +27,7 @@
     <text class="error-hint">下拉刷新重试</text>
   </view>
 
-  <!-- Category filter chips (D-10: horizontal scrollable) -->
+  <!-- Category filter chips -->
   <scroll-view class="filter-chips" scroll-x enhanced show-scrollbar="{{false}}">
     <view class="chips-row">
       <view
@@ -42,7 +42,7 @@
     </view>
   </scroll-view>
 
-  <!-- Radius preset pills (D-09) -->
+  <!-- Radius preset pills -->
   <view class="radius-presets">
     <view
       wx:for="{{radiusOptions}}"
@@ -55,54 +55,32 @@
     </view>
   </view>
 
-  <!-- Bottom sheet overlay (D-06, D-07) -->
-  <cover-view
+  <!-- Bottom sheet overlay -->
+  <view
     wx:if="{{showBottomSheet}}"
     class="bottom-sheet {{showBottomSheet ? 'bottom-sheet--open' : ''}}"
     bindtap="onBottomSheetClose"
   >
-    <cover-view class="sheet-content" catchtap="noop">
-      <!-- Handle bar -->
-      <cover-view class="handle-bar"></cover-view>
-
-      <!-- Site name (heading, 18px semibold) -->
-      <cover-view class="site-name">{{selectedSite.name}}</cover-view>
-
-      <!-- Category tag pill (vermilion background) -->
-      <cover-view class="category-tag">
+    <view class="sheet-content" catchtap="noop">
+      <view class="handle-bar"></view>
+      <view class="site-name">{{selectedSite.name}}</view>
+      <view class="category-tag">
         <text class="tag-text">{{selectedSite.category}}</text>
-      </cover-view>
-
-      <!-- Hero image (if available, 160px height) -->
-      <cover-view wx:if="{{selectedSite.imageUrl}}" class="hero-image">
-        <cover-image
-          src="{{selectedSite.imageUrl}}"
-          mode="aspectFill"
-          class="hero-img"
-        />
-      </cover-view>
-
-      <!-- Description (body, max 3 lines) -->
-      <cover-view class="description">
+      </view>
+      <view class="description">
         <text class="description-text">{{selectedSite.description}}</text>
-      </cover-view>
-
-      <!-- Address row -->
-      <cover-view class="address-row">
+      </view>
+      <view class="address-row">
         <text class="address-icon">📍</text>
         <text class="address-text">{{selectedSite.address}}</text>
-      </cover-view>
-
-      <!-- Distance (if available) -->
-      <cover-view wx:if="{{selectedSite.distance}}" class="distance-row">
-        <text class="distance-text">距离 {{selectedSite.distance < 1000 ? selectedSite.distance + 'm' : (selectedSite.distance/1000).toFixed(1) + 'km'}}</text>
-      </cover-view>
-
-      <!-- Navigation CTA button (D-08) -->
-      <cover-view class="nav-btn" bindtap="onNavigate">
+      </view>
+      <view wx:if="{{selectedSite.distanceText}}" class="distance-row">
+        <text class="distance-text">{{selectedSite.distanceText}}</text>
+      </view>
+      <view class="nav-btn" bindtap="onNavigate">
         <text class="nav-btn-text">导航前往</text>
-      </cover-view>
-    </cover-view>
-  </cover-view>
+      </view>
+    </view>
+  </view>
 
 </view>

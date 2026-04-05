@@ -24,65 +24,67 @@ const AGENTS = [
 
 // Taiji SVG spiral component
 const TaijiSpiral = ({ speed = 1 }) => (
-  <div className="relative w-80 h-80">
+  <div className="relative w-[320px] h-[320px] flex items-center justify-center">
     {/* Outer glow ring */}
-    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-vermilion/20 via-amber-500/10 to-cyan-glaze/20 blur-xl animate-pulse" />
+    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 via-transparent to-white/5 blur-2xl animate-pulse opacity-60" />
 
-    {/* SVG Taiji */}
-    <svg viewBox="0 0 200 200" className="w-full h-full" style={{ animation: `spin ${20 / speed}s linear infinite` }}>
+    {/* Elegant SVG Taiji */}
+    <svg viewBox="0 0 100 100" className="w-full h-full relative z-10" style={{ animation: `spin ${24 / speed}s linear infinite` }}>
       <defs>
-        <radialGradient id="yinGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#C04851" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#2B2B2B" stopOpacity="1" />
-        </radialGradient>
-        <radialGradient id="yangGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#F5F0E8" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#E8DFD0" stopOpacity="1" />
-        </radialGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        <linearGradient id="yinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#F7F5F0" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#F7F5F0" stopOpacity="0.1" />
+        </linearGradient>
+        <linearGradient id="yangGrad" x1="100%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#2B2B2B" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#2B2B2B" stopOpacity="0.1" />
+        </linearGradient>
+        <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.5" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
       </defs>
 
-      {/* Background circle */}
-      <circle cx="100" cy="100" r="96" fill="#1a1a1a" stroke="#C04851" strokeWidth="1.5" filter="url(#glow)" />
+      {/* Outer delicate rings */}
+      <circle cx="50" cy="50" r="48" fill="none" stroke="#F7F5F0" strokeWidth="0.2" strokeOpacity="0.15" />
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#F7F5F0" strokeWidth="0.5" strokeOpacity="0.3" strokeDasharray="2 4" className="origin-center" style={{ animation: `spin ${30 / speed}s linear infinite reverse` }} />
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#F7F5F0" strokeWidth="0.3" strokeOpacity="0.1" strokeDasharray="4 8" className="origin-center" style={{ animation: `spin ${20 / speed}s linear infinite` }} />
 
-      {/* Yin-Yang pattern */}
-      <circle cx="100" cy="100" r="48" fill="url(#yinGrad)" />
-      <circle cx="100" cy="76" r="24" fill="url(#yangGrad)" />
-      <circle cx="100" cy="124" r="24" fill="url(#yinGrad)" />
-      <circle cx="100" cy="76" r="8" fill="url(#yinGrad)" />
-      <circle cx="100" cy="124" r="8" fill="url(#yangGrad)" />
+      {/* Core abstract S-curve (Taiji divide) */}
+      <path d="M50,8 A42,42 0 0,1 50,92 A21,21 0 0,0 50,50 A21,21 0 0,1 50,8" fill="url(#yinGrad)" filter="url(#softGlow)" />
+      <path d="M50,92 A42,42 0 0,1 50,8 A21,21 0 0,0 50,50 A21,21 0 0,1 50,92" fill="url(#yangGrad)" filter="url(#softGlow)" />
 
-      {/* Spiral arms */}
-      <path d="M100,100 m0,-96 a96,96 0 0,1 0,192 a96,96 0 0,1 0,-192" fill="none" stroke="#C04851" strokeWidth="0.5" opacity="0.4" />
-      <path d="M100,100 m0,-80 a80,80 0 0,1 0,160 a80,80 0 0,1 0,-160" fill="none" stroke="#D4A574" strokeWidth="0.5" opacity="0.3" />
-      <path d="M100,100 m0,-64 a64,64 0 0,1 0,128 a64,64 0 0,1 0,-128" fill="none" stroke="#C04851" strokeWidth="0.5" opacity="0.4" />
-
-      {/* Decorative dots around edge */}
-      {[...Array(12)].map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
-        const x = 100 + 90 * Math.cos(angle);
-        const y = 100 + 90 * Math.sin(angle);
-        return <circle key={i} cx={x} cy={y} r="2" fill="#C04851" opacity="0.6" />;
-      })}
+      {/* Inner dots representing Yin and Yang - CORRECTED (Yin within Yang, Yang within Yin) */}
+      <circle cx="50" cy="29" r="2.5" fill="#2B2B2B" filter="url(#softGlow)" />
+      <circle cx="50" cy="71" r="2.5" fill="#F7F5F0" filter="url(#softGlow)" />
     </svg>
 
-    {/* Orbiting particles */}
-    {[...Array(6)].map((_, i) => (
+    {/* Orbiting geometric particles */}
+    {[...Array(3)].map((_, i) => (
       <div
-        key={i}
-        className="absolute w-2 h-2 rounded-full bg-vermilion"
+        key={`orbit1-${i}`}
+        className="absolute w-1.5 h-1.5 rounded-full bg-white/80 blur-[1px]"
         style={{
           top: '50%',
           left: '50%',
-          animation: `orbit ${8 / speed + i * 1.3}s linear infinite`,
-          animationDelay: `${i * -1.3}s`,
-          ['--angle']: `${i * 60}deg`,
+          animation: `orbit ${12 / speed + i * 2}s linear infinite`,
+          animationDelay: `${i * -2}s`,
+          ['--angle']: `${i * 120}deg`,
+          ['--radius']: '170px'
+        }}
+      />
+    ))}
+    {[...Array(3)].map((_, i) => (
+      <div
+        key={`orbit2-${i}`}
+        className="absolute w-1 h-1 rounded-full bg-white/40 blur-[1px]"
+        style={{
+          top: '50%',
+          left: '50%',
+          animation: `orbit ${15 / speed + i * 2}s linear infinite reverse`,
+          animationDelay: `${i * -3}s`,
+          ['--angle']: `${i * 120 + 60}deg`,
+          ['--radius']: '150px'
         }}
       />
     ))}
@@ -90,8 +92,8 @@ const TaijiSpiral = ({ speed = 1 }) => (
     <style>{`
       @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       @keyframes orbit {
-        from { transform: translate(-50%, -50%) rotate(var(--angle)) translateX(160px) rotate(calc(-1 * var(--angle))); }
-        to { transform: translate(-50%, -50%) rotate(calc(var(--angle) + 360deg)) translateX(160px) rotate(calc(-1 * var(--angle) - 360deg)); }
+        from { transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))); }
+        to { transform: translate(-50%, -50%) rotate(calc(var(--angle) + 360deg)) translateX(var(--radius)) rotate(calc(-1 * var(--angle) - 360deg)); }
       }
     `}</style>
   </div>

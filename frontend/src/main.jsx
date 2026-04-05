@@ -19,6 +19,10 @@ const MyPractice = lazy(() => import('./pages/MyPractice'));
 const VisionMentor = lazy(() => import('./pages/VisionMentor'));
 const ShadowPuppet = lazy(() => import('./pages/ShadowPuppet'));
 const CreativeWorkshop = lazy(() => import('./pages/CreativeWorkshop'));
+const Embroidery = lazy(() => import('./pages/Embroidery'));
+const Clay = lazy(() => import('./pages/Clay'));
+const PaperCutting = lazy(() => import('./pages/PaperCutting'));
+const Batik = lazy(() => import('./pages/Batik'));
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -31,6 +35,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path="/" element={<Intro />} />
               <Route path="/home" element={<Home />} />
               <Route path="/craft-library" element={<CraftLibrary />} />
+              <Route path="/craft/embroidery" element={<Embroidery />} />
+              <Route path="/craft/clay" element={<Clay />} />
+              <Route path="/craft/paper" element={<PaperCutting />} />
+              <Route path="/craft/batik" element={<Batik />} />
               <Route path="/master-workshop" element={<MasterWorkshop />} />
               <Route path="/my-practice" element={<MyPractice />} />
               <Route path="/vision-mentor" element={<VisionMentor />} />

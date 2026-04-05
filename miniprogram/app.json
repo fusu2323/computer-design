@@ -1,7 +1,9 @@
 {
   "pages": [
     "pages/home/index",
-    "pages/map/index"
+    "pages/create/index",
+    "pages/map/index",
+    "pages/history/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -9,7 +11,37 @@
     "navigationBarTitleText": "数字传承人",
     "navigationBarTextStyle": "white"
   },
+  "tabBar": {
+    "color": "#4A4A4A",
+    "selectedColor": "#C04851",
+    "backgroundColor": "#F7F5F0",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/map/index",
+        "text": "地图"
+      },
+      {
+        "pagePath": "pages/create/index",
+        "text": "创作"
+      },
+      {
+        "pagePath": "pages/history/index",
+        "text": "历史"
+      }
+    ]
+  },
   "style": "v2",
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "requiredPrivateInfos": ["getLocation", "chooseAddress"],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于查找附近的文化遗产点位"
+    }
+  }
 }

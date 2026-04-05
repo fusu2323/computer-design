@@ -40,7 +40,7 @@
     "swc": false,
     "disableSWC": true
   },
-  "libVersion": "3.3.0",
+  "libVersion": "3.15.1",
   "condition": {},
   "simulatorPluginLibVersion": {},
   "packOptions": {

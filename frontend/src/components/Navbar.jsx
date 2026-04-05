@@ -27,7 +27,6 @@ const Navbar = () => {
 
   const navLinks = [
     { to: '/craft-library', label: '技艺库' },
-    { to: '/master-workshop', label: '大师坊' },
     { to: '/creative-workshop', label: '创意工坊' },
     { to: '/my-practice', label: '我的修习' },
     { to: '/knowledge-curator', label: '知识馆长' },

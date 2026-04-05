@@ -61,14 +61,16 @@
 .card-image-placeholder {
   width: 100%;
   height: 400rpx;
-  background: linear-gradient(135deg, var(--color-cyan-glaze-light), var(--color-tea-green));
+  background: linear-gradient(135deg, rgba(87, 150, 179, 0.2), rgba(204, 212, 191, 0.6));
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .empty-image {
-  background: linear-gradient(135deg, var(--color-cyan-glaze-light), var(--color-tea-green));
+  background: linear-gradient(135deg, rgba(87, 150, 179, 0.2), rgba(204, 212, 191, 0.6));
 }
 
 .placeholder-text {
@@ -201,4 +203,66 @@
   background: var(--color-tea-green);
   border-radius: 2rpx;
   margin: 0 auto;
+}
+
+/* 地图入口按钮 */
+.map-entry-btn {
+  background: linear-gradient(135deg, var(--color-cyan-glaze), #4A7B8C);
+  color: var(--color-white);
+  border: none;
+  border-radius: 48rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  margin: var(--space-md) var(--space-sm);
+  width: calc(100% - var(--space-sm) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(87, 150, 179, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.map-entry-btn:active {
+  opacity: 0.9;
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(87, 150, 179, 0.4);
+}
+
+.map-entry-text {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  color: var(--color-white);
+}
+
+/* 创作入口按钮 */
+.create-entry-btn {
+  background: linear-gradient(135deg, var(--color-vermilion), #A03A43);
+  color: var(--color-white);
+  border: none;
+  border-radius: 48rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  margin: var(--space-sm) var(--space-sm) var(--space-md);
+  width: calc(100% - var(--space-sm) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(192, 72, 81, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.create-entry-btn:active {
+  opacity: 0.9;
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(192, 72, 81, 0.4);
+}
+
+.create-entry-text {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  color: var(--color-white);
 }

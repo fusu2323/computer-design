@@ -15,8 +15,15 @@ Page({
   },
 
   onShow() {
-    // 每次展示都检查登录状态
-    this.checkAuth()
+    // 每次展示检查登录状态，如果已登录且有数据则不强制重新加载
+    checkLoginStatus((isLoggedIn) => {
+      this.setData({ isLoggedIn })
+      if (isLoggedIn && !this.data.dailyFact) {
+        this.loadDailyFact()
+      } else if (!isLoggedIn) {
+        this.setData({ loading: false })
+      }
+    })
   },
 
   checkAuth() {
@@ -55,5 +62,5 @@ Page({
         this.setData({ loading: false })
       }
     )
-  },
+  }
 })

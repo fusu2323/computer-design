@@ -1,0 +1,8 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "纹样创作",
+  "navigationBarBackgroundColor": "#2B2B2B",
+  "navigationBarTextStyle": "white",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
+}

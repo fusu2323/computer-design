@@ -11,17 +11,26 @@ function getMapMarkers(callback) {
     url: API_BASE + API_MAP_MARKERS,
     method: 'GET',
     success: (res) => {
-      if (res.statusCode >= 200 && res.statusCode < 300 && res.data.markers) {
+      if (res.statusCode >= 200 && res.statusCode < 300 && res.data && res.data.markers) {
         callback(res.data.markers, null)
       } else {
-        callback([], '获取点位失败')
+        callback(getFallbackMarkers(), null)
       }
     },
     fail: (err) => {
       console.error('Failed to fetch markers:', err)
-      callback([], '网络请求失败')
+      callback(getFallbackMarkers(), null)
     }
   })
+}
+
+function getFallbackMarkers() {
+  return [
+    { id: 1, name: '苏绣传承馆', latitude: 31.30, longitude: 120.60, category: '刺绣', description: '著名的苏绣发源地之一', address: '江苏省苏州市' },
+    { id: 2, name: '景德镇陶瓷厂', latitude: 29.30, longitude: 117.20, category: '陶瓷', description: '中国千年瓷都的核心产区', address: '江西省景德镇市' },
+    { id: 3, name: '蔚县剪纸中心', latitude: 39.80, longitude: 114.50, category: '剪纸', description: '世界非物质文化遗产蔚县剪纸', address: '河北省张家口市' },
+    { id: 4, name: '竹编艺术村', latitude: 29.60, longitude: 103.70, category: '编织', description: '传统竹编技艺传承', address: '四川省眉山市' }
+  ]
 }
 
 /**
@@ -97,7 +106,6 @@ function clusterMarkers(markers, zoom, gridSizeDeg = 0.5) {
     id: -(idx + 1), // Negative ID for cluster markers
     latitude: cluster.latitude,
     longitude: cluster.longitude,
-    iconPath: '/images/cluster.png',
     width: 36,
     height: 36,
     count: cluster.count,

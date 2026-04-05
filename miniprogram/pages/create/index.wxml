@@ -1,0 +1,60 @@
+<view class="page">
+  <!-- Template selector strip -->
+  <scroll-view class="template-strip" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="templates-row">
+      <view
+        wx:for="{{templates}}"
+        wx:key="id"
+        class="template-thumb {{item.id === currentTemplateId ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onTemplateTap"
+      >
+        <text class="template-name">{{item.name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Canvas -->
+  <view class="canvas-wrapper">
+    <canvas
+      type="2d"
+      id="coloringCanvas"
+      class="coloring-canvas"
+      bindtap="onCanvasTap"
+    ></canvas>
+  </view>
+
+  <!-- Action bar -->
+  <view class="action-bar">
+    <view class="action-btn" bindtap="onUndo">
+      <text class="action-icon">↩️</text>
+      <text class="action-label">撤销</text>
+    </view>
+    <view class="action-btn" bindtap="onClear">
+      <text class="action-icon">🗑️</text>
+      <text class="action-label">清空</text>
+    </view>
+    <view class="action-btn" bindtap="onSave">
+      <text class="action-icon">💾</text>
+      <text class="action-label">保存</text>
+    </view>
+    <view class="action-btn" bindtap="onShare">
+      <text class="action-icon">📤</text>
+      <text class="action-label">分享</text>
+    </view>
+  </view>
+
+  <!-- Color palette -->
+  <scroll-view class="palette-bar" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="palette-row">
+      <view
+        wx:for="{{palette}}"
+        wx:key="hex"
+        class="color-swatch {{item.hex === selectedColor ? 'active' : ''}}"
+        style="background-color: {{item.hex}}"
+        data-hex="{{item.hex}}"
+        bindtap="onColorTap"
+      ></view>
+    </view>
+  </scroll-view>
+</view>

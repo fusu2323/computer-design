@@ -13,7 +13,6 @@ class MarkerSite(BaseModel):
     longitude: float
     address: str
     description: Optional[str] = ""
-    imageUrl: Optional[str] = ""
 
 class MarkerResponse(BaseModel):
     markers: List[MarkerSite]
@@ -24,18 +23,18 @@ async def get_markers():
     GET /api/v1/map/markers
     Returns all ICH sites with coordinates from Neo4j.
     Uses Heritage nodes that have latitude/longitude properties.
+    Note: Neo4j Heritage nodes use 'type' for category, no 'id' or 'imageUrl' properties.
     """
     cypher = """
     MATCH (h:Heritage)
     WHERE h.latitude IS NOT NULL AND h.longitude IS NOT NULL
-    RETURN h.id AS id,
+    RETURN COALESCE(h.name, '') AS id,
            h.name AS name,
-           h.category AS category,
+           COALESCE(h.type, '') AS category,
            h.latitude AS latitude,
            h.longitude AS longitude,
            COALESCE(h.address, '') AS address,
-           COALESCE(h.description, '') AS description,
-           COALESCE(h.imageUrl, '') AS imageUrl
+           COALESCE(h.description, '') AS description
     """
     results = neo4j_service.query(cypher)
     if results is None:
@@ -52,7 +51,6 @@ class NearbySite(BaseModel):
     address: str
     distance: float  # meters
     description: Optional[str] = ""
-    imageUrl: Optional[str] = ""
 
 class NearbyResponse(BaseModel):
     sites: List[NearbySite]
@@ -67,6 +65,7 @@ async def get_nearby(
     GET /api/v1/map/nearby?lat=35.0&lng=105.0&radius=5000
     Returns ICH sites within the specified radius from the user's location.
     Uses Haversine formula for distance calculation in meters.
+    Note: Neo4j Heritage nodes use 'type' for category, no 'id' or 'imageUrl' properties.
     """
     cypher = """
     MATCH (h:Heritage)
@@ -74,14 +73,13 @@ async def get_nearby(
     WITH h, round(distance(point({latitude: $lat, longitude: $lng}),
                           point({latitude: h.latitude, longitude: h.longitude}))) AS dist
     WHERE dist <= $radius
-    RETURN h.id AS id,
+    RETURN COALESCE(h.name, '') AS id,
            h.name AS name,
-           h.category AS category,
+           COALESCE(h.type, '') AS category,
            h.latitude AS latitude,
            h.longitude AS longitude,
            COALESCE(h.address, '') AS address,
            COALESCE(h.description, '') AS description,
-           COALESCE(h.imageUrl, '') AS imageUrl,
            dist AS distance
     ORDER BY dist ASC
     """

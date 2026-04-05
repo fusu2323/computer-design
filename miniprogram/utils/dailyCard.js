@@ -52,14 +52,25 @@ function getDailyFact(successCb) {
 
         if (successCb) successCb(facts[index], null)
       } else {
-        if (successCb) successCb(null, '网络开小差了，请稍后重试')
+        fallbackFact(successCb)
       }
     },
     fail: (err) => {
       console.error('Failed to fetch daily fact:', err)
-      if (successCb) successCb(null, '网络开小差了，请稍后重试')
+      fallbackFact(successCb)
     }
   })
+}
+
+function fallbackFact(successCb) {
+  const fallback = {
+    id: 'fb1',
+    title: '剪纸艺术',
+    category: '剪纸',
+    imageUrl: '',
+    fact: '剪纸是中国汉族最古老的民间艺术之一，其在视觉上给人以透空的感觉和艺术享受。'
+  }
+  if (successCb) successCb(fallback, null)
 }
 
 module.exports = {

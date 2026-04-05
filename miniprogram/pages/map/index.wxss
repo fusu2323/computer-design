@@ -118,12 +118,52 @@
 /* Radius preset pills (D-09) */
 .radius-presets {
   position: absolute;
-  bottom: 180rpx;
+  top: 100rpx;
+  right: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: 1;
+}
+
+/* Navigation bar */
+.map-nav-bar {
+  position: absolute;
+  bottom: 80rpx;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   z-index: 1;
+}
+
+.nav-btn-home,
+.nav-btn-create {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80rpx;
+  padding: 0 var(--space-xl);
+  background: rgba(247, 245, 240, 0.95);
+  border: 2rpx solid var(--color-charcoal);
+  border-radius: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.nav-btn-create {
+  background: var(--color-vermilion);
+  border-color: var(--color-vermilion);
+}
+
+.nav-btn-text {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 28rpx;
+  color: var(--color-ink-black);
+}
+
+.nav-btn-create .nav-btn-text {
+  color: var(--color-rice-paper);
 }
 
 .pill {
@@ -133,9 +173,11 @@
   min-width: 100rpx;
   height: 64rpx;
   padding: 0 var(--space-md);
-  background: var(--color-rice-paper);
+  background: rgba(247, 245, 240, 0.9);
   border: 2rpx solid var(--color-charcoal);
   border-radius: 32rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
 }
 
 .pill--active {
@@ -180,10 +222,16 @@
   max-height: 70vh;
   background: var(--color-rice-paper);
   border-radius: 32rpx 32rpx 0 0;
-  padding: var(--space-md);
+  padding: var(--space-lg);
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bottom-sheet--open .sheet-content {
+  transform: translateY(0);
 }
 
 /* Handle bar */
@@ -301,4 +349,25 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Debug log overlay */
+.debug-log {
+  position: fixed;
+  top: 120rpx;
+  left: 16rpx;
+  right: 16rpx;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 16rpx;
+  border-radius: 8rpx;
+  z-index: 999;
+  max-height: 300rpx;
+  overflow: scroll;
+}
+
+.debug-text {
+  color: #0f0;
+  font-size: 20rpx;
+  font-family: monospace;
+  white-space: pre-wrap;
 }

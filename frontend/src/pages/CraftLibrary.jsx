@@ -15,48 +15,48 @@ const CraftLibrary = () => {
   const crafts = [
     {
       id: 1,
-      name: "苏绣 · 平针绣",
+      name: "苏绣",
       category: "embroidery",
       image: SuEmbroidery,
-      desc: "苏绣基础针法，线条流畅，平整光亮。适合初学者入门，通过视觉 Agent 实时纠正下针角度。",
-      features: ["视觉纠偏支持"],
-      learners: "1.2k"
+      desc: "中国四大名绣之一，以针作画，以线交织，展现江南水乡的温婉与秀美。针法丰富，平齐细密。",
+      features: ["江南名绣", "丝线艺术"],
+      learners: "基础知识"
     },
     {
       id: 2,
-      name: "紫砂 · 拍泥片",
+      name: "紫砂壶制作",
       category: "clay",
       image: PurpleClay,
-      desc: "宜兴紫砂壶成型的关键工序。通过 ST-GCN 分析手臂发力与拍打节奏，还原大师手感。",
-      features: ["动作捕捉支持"],
-      learners: "856"
+      desc: "宜兴特产，以紫砂泥为原料，不施釉，透气性好。泥片镶接成型，技艺独特，蕴含文人雅趣。",
+      features: ["茶道圣品", "泥片镶接"],
+      learners: "基础知识"
     },
     {
       id: 3,
-      name: "剪纸 · 团花纹",
+      name: "剪纸",
       category: "paper",
       image: PaperCutting,
-      desc: "利用对称美学创作团花。创意艺匠 Agent 可辅助生成纹样草图，并指导折叠技巧。",
-      features: ["AIGC 生成支持"],
-      learners: "2.3k"
+      desc: "以纸为载体，剪刀或刻刀为工具，创作出千变万化的镂空艺术。寓意吉祥，充满浓郁的民俗风情。",
+      features: ["镂空艺术", "民俗文化"],
+      learners: "基础知识"
     },
     {
       id: 4,
-      name: "蜡染 · 冰裂纹",
+      name: "蜡染",
       category: "batik",
       image: Batik,
-      desc: "苗族传统印染技艺。模拟蜡刀绘画路径，掌握冰裂纹的自然形成规律。",
-      features: ["AIGC 生成支持"],
-      learners: "530"
+      desc: "利用蜂蜡防染，靛蓝染色，洗去蜡后呈现出独特的冰裂纹。古朴典雅，是苗族等少数民族的传统技艺。",
+      features: ["防染工艺", "冰裂纹理"],
+      learners: "基础知识"
     },
     {
       id: 5,
-      name: "皮影 · 操纵技法",
+      name: "皮影戏",
       category: "shadow",
       image: ShadowPuppetImg,
-      desc: "皮影戏核心表演技艺，用三根竹签操纵影人。视觉导师 Agent 实时捕捉手势动作，纠正操纵姿势。",
-      features: ["视觉纠偏支持", "手势追踪"],
-      learners: "1.8k"
+      desc: "以兽皮刻制影人，在灯光照射下隔亮布操作表演。集雕刻、绘画、音乐、表演于一体的综合艺术。",
+      features: ["光影艺术", "戏剧表演"],
+      learners: "基础知识"
     }
   ];
 
@@ -67,8 +67,8 @@ const CraftLibrary = () => {
       <main className="pt-32 pb-20 px-4 md:px-12 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="font-calligraphy text-5xl mb-4 text-ink-black">非遗技艺库</h1>
-          <p className="text-charcoal/60 font-serif text-lg tracking-widest">探寻千年匠心，重拾指尖传承</p>
+          <h1 className="font-calligraphy text-5xl mb-4 text-ink-black">非遗基础知识库</h1>
+          <p className="text-charcoal/60 font-serif text-lg tracking-widest">探寻千年匠心，了解中华非物质文化遗产</p>
         </div>
 
         {/* Filter Tabs */}
@@ -91,7 +91,7 @@ const CraftLibrary = () => {
         {/* Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {crafts.filter(craft => activeTab === 'all' || craft.category === activeTab).map(craft => (
-            <Card key={craft.id} className="cursor-pointer group" onClick={() => navigate(craft.category === 'shadow' ? '/shadow-puppet' : craft.category === 'embroidery' ? '/vision-mentor?scenario=embroidery' : '#')}>
+            <Card key={craft.id} className="cursor-pointer group" onClick={() => navigate(craft.category === 'shadow' ? '/shadow-puppet' : `/craft/${craft.category}`)}>
               <div className="absolute top-4 right-4 z-10 bg-black/60 text-white text-xs px-2 py-1 rounded-sm font-sans backdrop-blur-sm">热门</div>
               <div className="h-64 overflow-hidden relative">
                 <div className="absolute inset-0 bg-ink-black/10 group-hover:bg-transparent transition-colors z-10"></div>
