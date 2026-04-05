@@ -7,7 +7,7 @@
 ## Phases
 
 - [x] **Phase 2: 小程序基础架构** — Taro 项目脚手架、微信登录、每日知识卡片 (completed 2026-04-01)
-- [x] **Phase 3: 全国非遗地图 + LBS** — 地图探索、附近发现、导航跳转 (completed 2026-04-01)
+- [x] **Phase 3: 全国非遗地图 + LBS** — 地图探索、附近发现、导航跳转 (completed 2026-04-01)
 - [ ] **Phase 4: 微创作 + 分享** — 纹样填色、创作保存、微信分享
 
 ---
@@ -78,7 +78,9 @@
 4. User can share their creation to WeChat moments or send to a WeChat contact
 5. User can view their own creation history in the app
 
-**Plans:** TBD
+**Plans:** 1/1 plans
+**Plan list:**
+- [x] 04-PLAN.md — Creation canvas (templates + flood-fill + palette), save-to-album, WeChat sharing, history page
 
 **UI hint:** yes
 
